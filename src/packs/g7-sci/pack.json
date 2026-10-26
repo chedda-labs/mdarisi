@@ -1,0 +1,330 @@
+{
+  "manifest": {
+    "pack": "g7-sci",
+    "version": "0.1.0",
+    "curriculumVersion": "kicd-unconfirmed",
+    "builtAt": "2026-10-26T14:08:54.719Z",
+    "drafts": 12
+  },
+  "subStrands": [
+    {
+      "id": "g7.sci.mix",
+      "strand": "Mixtures, Elements and Compounds",
+      "subStrand": "Mixtures",
+      "namesConfirmed": false,
+      "slos": [
+        {
+          "id": "g7.sci.mix.01",
+          "outcome": "Describe a mixture and give everyday examples"
+        },
+        {
+          "id": "g7.sci.mix.02",
+          "outcome": "Tell apart pure substances, uniform mixtures and non-uniform mixtures"
+        },
+        {
+          "id": "g7.sci.mix.03",
+          "outcome": "Choose a suitable method to separate a simple mixture"
+        }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "itm_mix_l01",
+      "slos": [
+        "g7.sci.mix.01"
+      ],
+      "type": "lesson",
+      "lang": "en",
+      "title": "What is a mixture?",
+      "body": "A mixture is made when two or more substances are put together without joining chemically. Each substance in a mixture keeps its own properties. In salt water, the salt is still salty and the water is still wet. Because the substances are not chemically joined, a mixture can be separated again by physical methods such as sieving, filtering or evaporating. The amounts in a mixture can also change: you can make tea with one spoon of sugar or with three, and it is still a mixture of tea and sugar. Mixtures are all around us. Air is a mixture of gases such as nitrogen and oxygen. Soil is a mixture of sand, clay, humus, water and air. Githeri is a mixture of maize and beans, and sea water at Mombasa is a mixture of water and salts.",
+      "status": "draft",
+      "reviewedBy": null
+    },
+    {
+      "id": "itm_mix_l02",
+      "slos": [
+        "g7.sci.mix.02"
+      ],
+      "type": "lesson",
+      "lang": "en",
+      "title": "Uniform and non-uniform mixtures",
+      "body": "Some mixtures look the same all the way through. These are uniform mixtures. Salt water and sugar dissolved in tea are uniform: every sip tastes the same and you cannot see the separate parts. A uniform mixture of a solid dissolved in a liquid is called a solution. The substance that dissolves, such as salt, is the solute. The liquid it dissolves in, such as water, is the solvent. Other mixtures are not the same all the way through. These are non-uniform mixtures. In githeri you can see the maize and the beans. In muddy water, the soil slowly settles at the bottom. In soil you can see stones, sand and bits of dead plants. A quick test: if you can see the different parts, or they separate when left to stand, the mixture is non-uniform.",
+      "status": "draft",
+      "reviewedBy": null
+    },
+    {
+      "id": "itm_mix_l03",
+      "slos": [
+        "g7.sci.mix.02",
+        "g7.sci.mix.03"
+      ],
+      "type": "lesson",
+      "lang": "en",
+      "title": "Pure substances and separating mixtures",
+      "body": "A pure substance is made of only one kind of matter. Pure water, gold, oxygen and table salt on its own are pure substances. A mixture contains two or more substances, so it can be separated. We choose a method that uses a difference between the substances. Sieving separates pieces of different sizes, such as stones from sand or husks from flour. Filtering separates a solid that does not dissolve from a liquid: muddy water is poured through filter paper, the soil stays on the paper and clear water passes through. Evaporation gets a dissolved solid back from a solution: when salt water is heated, the water turns to vapour and the salt is left behind. A magnet separates iron from things that are not magnetic, such as iron filings from sand. Decanting means pouring off a liquid gently, leaving the settled solid at the bottom.",
+      "status": "draft",
+      "reviewedBy": null
+    },
+    {
+      "id": "itm_mix_e01",
+      "slos": [
+        "g7.sci.mix.03"
+      ],
+      "type": "example",
+      "lang": "en",
+      "title": "Worked example: getting clean salt from salty sand",
+      "body": "Problem: Amina has a mixture of sand and salt. How can she get clean, dry salt? Step 1: Add water and stir. The salt dissolves but the sand does not. Step 2: Filter the mixture. The sand stays on the filter paper. The salt solution, called the filtrate, passes through. Step 3: Heat the filtrate in an evaporating dish until the water has evaporated. Clean salt is left in the dish. Why it works: salt dissolves in water but sand does not, so filtering separates them; then evaporation separates the salt from the water.",
+      "status": "draft",
+      "reviewedBy": null
+    },
+    {
+      "id": "itm_mix_m01",
+      "slos": [
+        "g7.sci.mix.01"
+      ],
+      "type": "misconception",
+      "lang": "en",
+      "title": "Misconception: a mixture is things that don't mix",
+      "body": "Some learners think a mixture means substances that do not mix together, like oil and water. This is not right. In a mixture the substances are mixed but not chemically joined. Some mixtures mix completely: salt water looks like plain water, yet it is still a mixture because the salt can be got back by evaporation. Others, like githeri or sand and water, mix less evenly. Both are mixtures.",
+      "status": "draft",
+      "reviewedBy": null
+    },
+    {
+      "id": "itm_mix_m02",
+      "slos": [
+        "g7.sci.mix.02"
+      ],
+      "type": "misconception",
+      "lang": "en",
+      "title": "Misconception: dissolved sugar disappears",
+      "body": "When sugar dissolves in tea, it seems to disappear. It does not. The sugar breaks into particles too small to see and spreads through the tea. You can tell it is still there because the tea tastes sweet. If you weigh the water and sugar before mixing and the sugar solution after, the mass is the same. If you evaporate the water, the sugar is left behind.",
+      "status": "draft",
+      "reviewedBy": null
+    },
+    {
+      "id": "itm_mix_p01",
+      "slos": [
+        "g7.sci.mix.02"
+      ],
+      "type": "practice",
+      "lang": "en",
+      "prompt": "Which of these is a mixture?",
+      "choices": [
+        "Pure water",
+        "Gold",
+        "Salt water",
+        "Oxygen"
+      ],
+      "answer": {
+        "kind": "mcq",
+        "value": 2
+      },
+      "hints": [
+        "A mixture has two or more substances that are not chemically joined."
+      ],
+      "explanation": "Salt water contains two substances, salt and water, and the salt can be got back by evaporation. Pure water, gold and oxygen are each one pure substance.",
+      "status": "draft",
+      "reviewedBy": null
+    },
+    {
+      "id": "itm_mix_p02",
+      "slos": [
+        "g7.sci.mix.02"
+      ],
+      "type": "practice",
+      "lang": "en",
+      "prompt": "True or false: when salt dissolves in water, the salt is destroyed.",
+      "answer": {
+        "kind": "truefalse",
+        "value": false
+      },
+      "hints": [
+        "Think about how salt water tastes."
+      ],
+      "explanation": "False. The salt breaks into particles too small to see, but it is still there: the water tastes salty, and evaporating the water leaves the salt behind.",
+      "status": "draft",
+      "reviewedBy": null
+    },
+    {
+      "id": "itm_mix_p03",
+      "slos": [
+        "g7.sci.mix.03"
+      ],
+      "type": "practice",
+      "lang": "en",
+      "prompt": "Which is the best way to separate iron filings from sand?",
+      "choices": [
+        "Evaporation",
+        "Using a magnet",
+        "Filtering",
+        "Dissolving in water"
+      ],
+      "answer": {
+        "kind": "mcq",
+        "value": 1
+      },
+      "hints": [
+        "Which of the two is attracted to a magnet?"
+      ],
+      "explanation": "Iron is magnetic and sand is not, so a magnet pulls out the iron filings and leaves the sand.",
+      "status": "draft",
+      "reviewedBy": null
+    },
+    {
+      "id": "itm_mix_p04",
+      "slos": [
+        "g7.sci.mix.02"
+      ],
+      "type": "practice",
+      "lang": "en",
+      "prompt": "Which of these is a uniform mixture?",
+      "choices": [
+        "Githeri",
+        "Soil",
+        "Sand and water",
+        "Sugar dissolved in tea"
+      ],
+      "answer": {
+        "kind": "mcq",
+        "value": 3
+      },
+      "hints": [
+        "A uniform mixture looks the same all the way through."
+      ],
+      "explanation": "Sugar dissolved in tea is a solution: it looks and tastes the same throughout. In githeri, soil, and sand and water you can see the different parts.",
+      "status": "draft",
+      "reviewedBy": null
+    },
+    {
+      "id": "itm_mix_p05",
+      "slos": [
+        "g7.sci.mix.02"
+      ],
+      "type": "practice",
+      "lang": "en",
+      "prompt": "Wanjiku dissolves 20 g of salt in 100 g of water. What is the mass of the salt water, in grams?",
+      "answer": {
+        "kind": "numeric",
+        "value": 120
+      },
+      "hints": [
+        "Does dissolving add or remove any mass?"
+      ],
+      "explanation": "Dissolving does not destroy the salt, so no mass is lost: 20 g + 100 g = 120 g.",
+      "status": "draft",
+      "reviewedBy": null
+    },
+    {
+      "id": "itm_mix_p06",
+      "slos": [
+        "g7.sci.mix.03"
+      ],
+      "type": "practice",
+      "lang": "en",
+      "prompt": "How can you get salt back from salt water?",
+      "choices": [
+        "Filter it",
+        "Sieve it",
+        "Evaporate the water",
+        "Use a magnet"
+      ],
+      "answer": {
+        "kind": "mcq",
+        "value": 2
+      },
+      "hints": [
+        "The salt has dissolved, so it will pass through filter paper."
+      ],
+      "explanation": "Heating the salt water makes the water evaporate and leaves the salt behind. Filtering and sieving cannot catch dissolved salt, and salt is not magnetic.",
+      "status": "draft",
+      "reviewedBy": null
+    }
+  ],
+  "chunks": [
+    {
+      "id": "itm_mix_l01",
+      "itemId": "itm_mix_l01",
+      "subStrand": "g7.sci.mix",
+      "title": "What is a mixture?",
+      "text": "A mixture is made when two or more substances are put together without joining chemically. Each substance in a mixture keeps its own properties. In salt water, the salt is still salty and the water is still wet. Because the substances are not chemically joined, a mixture can be separated again by physical methods such as sieving, filtering or evaporating. The amounts in a mixture can also change: you can make tea with one spoon of sugar or with three, and it is still a mixture of tea and sugar. Mixtures are all around us. Air is a mixture of gases such as nitrogen and oxygen. Soil is a mixture of sand, clay, humus, water and air. Githeri is a mixture of maize and beans, and sea water at Mombasa is a mixture of water and salts."
+    },
+    {
+      "id": "itm_mix_l02",
+      "itemId": "itm_mix_l02",
+      "subStrand": "g7.sci.mix",
+      "title": "Uniform and non-uniform mixtures",
+      "text": "Some mixtures look the same all the way through. These are uniform mixtures. Salt water and sugar dissolved in tea are uniform: every sip tastes the same and you cannot see the separate parts. A uniform mixture of a solid dissolved in a liquid is called a solution. The substance that dissolves, such as salt, is the solute. The liquid it dissolves in, such as water, is the solvent. Other mixtures are not the same all the way through. These are non-uniform mixtures. In githeri you can see the maize and the beans. In muddy water, the soil slowly settles at the bottom. In soil you can see stones, sand and bits of dead plants. A quick test: if you can see the different parts, or they separate when left to stand, the mixture is non-uniform."
+    },
+    {
+      "id": "itm_mix_l03",
+      "itemId": "itm_mix_l03",
+      "subStrand": "g7.sci.mix",
+      "title": "Pure substances and separating mixtures",
+      "text": "A pure substance is made of only one kind of matter. Pure water, gold, oxygen and table salt on its own are pure substances. A mixture contains two or more substances, so it can be separated. We choose a method that uses a difference between the substances. Sieving separates pieces of different sizes, such as stones from sand or husks from flour. Filtering separates a solid that does not dissolve from a liquid: muddy water is poured through filter paper, the soil stays on the paper and clear water passes through. Evaporation gets a dissolved solid back from a solution: when salt water is heated, the water turns to vapour and the salt is left behind. A magnet separates iron from things that are not magnetic, such as iron filings from sand. Decanting means pouring off a liquid gently, leaving the settled solid at the bottom."
+    },
+    {
+      "id": "itm_mix_e01",
+      "itemId": "itm_mix_e01",
+      "subStrand": "g7.sci.mix",
+      "title": "Worked example: getting clean salt from salty sand",
+      "text": "Problem: Amina has a mixture of sand and salt. How can she get clean, dry salt? Step 1: Add water and stir. The salt dissolves but the sand does not. Step 2: Filter the mixture. The sand stays on the filter paper. The salt solution, called the filtrate, passes through. Step 3: Heat the filtrate in an evaporating dish until the water has evaporated. Clean salt is left in the dish. Why it works: salt dissolves in water but sand does not, so filtering separates them; then evaporation separates the salt from the water."
+    },
+    {
+      "id": "itm_mix_m01",
+      "itemId": "itm_mix_m01",
+      "subStrand": "g7.sci.mix",
+      "title": "Misconception: a mixture is things that don't mix",
+      "text": "Some learners think a mixture means substances that do not mix together, like oil and water. This is not right. In a mixture the substances are mixed but not chemically joined. Some mixtures mix completely: salt water looks like plain water, yet it is still a mixture because the salt can be got back by evaporation. Others, like githeri or sand and water, mix less evenly. Both are mixtures."
+    },
+    {
+      "id": "itm_mix_m02",
+      "itemId": "itm_mix_m02",
+      "subStrand": "g7.sci.mix",
+      "title": "Misconception: dissolved sugar disappears",
+      "text": "When sugar dissolves in tea, it seems to disappear. It does not. The sugar breaks into particles too small to see and spreads through the tea. You can tell it is still there because the tea tastes sweet. If you weigh the water and sugar before mixing and the sugar solution after, the mass is the same. If you evaporate the water, the sugar is left behind."
+    },
+    {
+      "id": "itm_mix_p01",
+      "itemId": "itm_mix_p01",
+      "subStrand": "g7.sci.mix",
+      "title": "Explanation: Which of these is a mixture?",
+      "text": "Salt water contains two substances, salt and water, and the salt can be got back by evaporation. Pure water, gold and oxygen are each one pure substance."
+    },
+    {
+      "id": "itm_mix_p02",
+      "itemId": "itm_mix_p02",
+      "subStrand": "g7.sci.mix",
+      "title": "Explanation: True or false: when salt dissolves in water, the salt is destroyed.",
+      "text": "False. The salt breaks into particles too small to see, but it is still there: the water tastes salty, and evaporating the water leaves the salt behind."
+    },
+    {
+      "id": "itm_mix_p03",
+      "itemId": "itm_mix_p03",
+      "subStrand": "g7.sci.mix",
+      "title": "Explanation: Which is the best way to separate iron filings from sand?",
+      "text": "Iron is magnetic and sand is not, so a magnet pulls out the iron filings and leaves the sand."
+    },
+    {
+      "id": "itm_mix_p04",
+      "itemId": "itm_mix_p04",
+      "subStrand": "g7.sci.mix",
+      "title": "Explanation: Which of these is a uniform mixture?",
+      "text": "Sugar dissolved in tea is a solution: it looks and tastes the same throughout. In githeri, soil, and sand and water you can see the different parts."
+    },
+    {
+      "id": "itm_mix_p05",
+      "itemId": "itm_mix_p05",
+      "subStrand": "g7.sci.mix",
+      "title": "Explanation: Wanjiku dissolves 20 g of salt in 100 g of water. What is the mass of the salt water, in grams?",
+      "text": "Dissolving does not destroy the salt, so no mass is lost: 20 g + 100 g = 120 g."
+    },
+    {
+      "id": "itm_mix_p06",
+      "itemId": "itm_mix_p06",
+      "subStrand": "g7.sci.mix",
+      "title": "Explanation: How can you get salt back from salt water?",
+      "text": "Heating the salt water makes the water evaporate and leaves the salt behind. Filtering and sieving cannot catch dissolved salt, and salt is not magnetic."
+    }
+  ]
+}

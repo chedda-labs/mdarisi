@@ -1,0 +1,19 @@
+{
+  "pack": "g7-sci",
+  "curriculumVersion": "kicd-unconfirmed",
+  "grade": 7,
+  "learningArea": "Integrated Science",
+  "subStrands": [
+    {
+      "id": "g7.sci.mix",
+      "strand": "Mixtures, Elements and Compounds",
+      "subStrand": "Mixtures",
+      "namesConfirmed": false,
+      "slos": [
+        { "id": "g7.sci.mix.01", "outcome": "Describe a mixture and give everyday examples" },
+        { "id": "g7.sci.mix.02", "outcome": "Tell apart pure substances, uniform mixtures and non-uniform mixtures" },
+        { "id": "g7.sci.mix.03", "outcome": "Choose a suitable method to separate a simple mixture" }
+      ]
+    }
+  ]
+}
