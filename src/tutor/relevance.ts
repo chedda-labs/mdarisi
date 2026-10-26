@@ -45,7 +45,8 @@ export async function buildIndex(embedModelId: string, chunks: Chunk[]): Promise
 // calling the LLM, since a small model can't be trusted to refuse by itself.
 export async function relevance(embedModelId: string, index: RelevanceIndex, question: string) {
   const { embedding } = await embed({ modelId: embedModelId, text: queryText(question) });
-  const scores = index.vectors.map((v) => cosine(embedding, v));
-  const best = scores.indexOf(Math.max(...scores));
-  return { score: scores[best], chunkId: index.chunks[best].id };
+  const ranked = index.vectors
+    .map((v, i) => ({ chunk: index.chunks[i], score: cosine(embedding, v) }))
+    .sort((a, b) => b.score - a.score);
+  return { score: ranked[0].score, chunkId: ranked[0].chunk.id, ranked };
 }

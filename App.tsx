@@ -1,33 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { Platform, SafeAreaView, StatusBar, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import { runCacheTest } from "./src/bench/runCacheTest";
+import BenchScreen from "./src/screens/BenchScreen";
+import TutorScreen from "./src/screens/TutorScreen";
 
-// Day-2 KV-cache test: results go to logcat as [cache] JSON lines.
-// (The model bake-off is src/bench/runBench.ts.)
+// Set at bundle time: EXPO_PUBLIC_SCREEN=bench or =cache runs a benchmark instead of the tutor.
+const SCREEN = process.env.EXPO_PUBLIC_SCREEN;
+
 export default function App() {
-  const [status, setStatus] = useState("Starting…");
-
-  useEffect(() => {
-    runCacheTest(setStatus).catch((e: any) => {
-      console.error("[bench]", e);
-      setStatus(`Error: ${e?.message ?? String(e)}`);
-    });
-  }, []);
-
   return (
-    <SafeAreaView style={styles.safe}>
-      <View style={styles.container}>
-        <Text style={styles.h1}>Mdarisi cache test</Text>
-        <Text style={styles.status}>{status}</Text>
-      </View>
-    </SafeAreaView>
+    <SafeAreaProvider>
+      <StatusBar style="dark" />
+      {SCREEN === "bench" || SCREEN === "cache" ? <BenchScreen which={SCREEN} /> : <TutorScreen />}
+    </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#0B0B0F", paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0 },
-  container: { flex: 1, padding: 16, gap: 12 },
-  h1: { color: "white", fontSize: 18, fontWeight: "600" },
-  status: { color: "#A7A7B3" },
-});
