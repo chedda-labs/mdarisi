@@ -58,7 +58,7 @@ export const OUT_OF_SCOPE = [
 ];
 
 export const SPEED_CASE = CASES[0];
-export const LLMS: ModelRole[] = ["llm", "llmAlt"];
+export const LLMS: ModelRole[] = ["baseline", "tutor"];
 export const THREADS = [4, 6, 8];
 export const SPEED_RUNS = 3;
 

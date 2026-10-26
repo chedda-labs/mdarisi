@@ -8,7 +8,7 @@ import { buildIndex, EMBED_CONFIG, relevance, type RelevanceIndex } from "../tut
 import { CASES, GENERATION, MORE_IN_SCOPE, OUT_OF_SCOPE } from "./cases";
 
 const SUB_STRAND = "g7.sci.mix";
-const MODELS: ModelRole[] = ["llmAlt"];
+const MODELS: ModelRole[] = ["tutor"];
 const THREADS = 6;
 // Whole sub-strand + examples + question + answer.
 const CTX_SIZE = 3072;

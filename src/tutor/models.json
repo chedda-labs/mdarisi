@@ -1,21 +1,12 @@
 {
-  "llm": {
-    "catalog": "LLAMA_3_2_1B_INST_Q4_0",
-    "file": "Llama-3.2-1B-Instruct-Q4_0.gguf",
-    "url": "https://huggingface.co/unsloth/Llama-3.2-1B-Instruct-GGUF/resolve/b69aef112e9f895e6f98d7ae0949f72ff09aa401/Llama-3.2-1B-Instruct-Q4_0.gguf",
-    "size": 773025824,
-    "sha256": "66bfbb2d48bdb77cd56bd03ef820deff3c4a74b1a09de3b917ae13e72c1a70c2",
-    "license": "Llama 3.2 Community License",
-    "bundle": true
-  },
-  "llmAlt": {
+  "tutor": {
     "catalog": "QWEN3_600M_INST_Q4",
     "file": "Qwen3-0.6B-Q4_0.gguf",
     "url": "https://huggingface.co/unsloth/Qwen3-0.6B-GGUF/resolve/50968a4468ef4233ed78cd7c3de230dd1d61a56b/Qwen3-0.6B-Q4_0.gguf",
     "size": 382156480,
     "sha256": "33bcc57074ec7b6eada5a90651ee546ec0c2b271002c22baf9f1b2dd1e8f75cb",
     "license": "Apache-2.0",
-    "bundle": false
+    "bundle": true
   },
   "embed": {
     "catalog": "EMBEDDINGGEMMA_300M_Q4_0",
@@ -24,6 +15,15 @@
     "size": 277852192,
     "sha256": "edc6015cb15694c27be7d1d33f1bc015db9a358ff51ed524628c027504907ba9",
     "license": "Gemma Terms of Use",
+    "bundle": true
+  },
+  "baseline": {
+    "catalog": "LLAMA_3_2_1B_INST_Q4_0",
+    "file": "Llama-3.2-1B-Instruct-Q4_0.gguf",
+    "url": "https://huggingface.co/unsloth/Llama-3.2-1B-Instruct-GGUF/resolve/b69aef112e9f895e6f98d7ae0949f72ff09aa401/Llama-3.2-1B-Instruct-Q4_0.gguf",
+    "size": 773025824,
+    "sha256": "66bfbb2d48bdb77cd56bd03ef820deff3c4a74b1a09de3b917ae13e72c1a70c2",
+    "license": "Llama 3.2 Community License",
     "bundle": false
   }
 }
