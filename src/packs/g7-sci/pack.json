@@ -3,7 +3,9 @@
     "pack": "g7-sci",
     "version": "0.1.0",
     "curriculumVersion": "kicd-unconfirmed",
-    "builtAt": "2026-10-26T14:08:54.719Z",
+    "grade": 7,
+    "learningArea": "Integrated Science",
+    "builtAt": "2026-10-26T16:46:26.169Z",
     "drafts": 12
   },
   "subStrands": [
@@ -12,6 +14,11 @@
       "strand": "Mixtures, Elements and Compounds",
       "subStrand": "Mixtures",
       "namesConfirmed": false,
+      "suggestedQuestions": [
+        "Is air a mixture?",
+        "How can I separate sand from water?",
+        "What is a solute?"
+      ],
       "slos": [
         {
           "id": "g7.sci.mix.01",

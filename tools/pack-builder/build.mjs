@@ -101,6 +101,8 @@ const pack = {
     pack: slos.pack,
     version: "0.1.0",
     curriculumVersion: slos.curriculumVersion,
+    grade: slos.grade,
+    learningArea: slos.learningArea,
     builtAt: new Date().toISOString(),
     drafts,
   },

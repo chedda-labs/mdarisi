@@ -9,6 +9,7 @@
       "strand": "Mixtures, Elements and Compounds",
       "subStrand": "Mixtures",
       "namesConfirmed": false,
+      "suggestedQuestions": ["Is air a mixture?", "How can I separate sand from water?", "What is a solute?"],
       "slos": [
         { "id": "g7.sci.mix.01", "outcome": "Describe a mixture and give everyday examples" },
         { "id": "g7.sci.mix.02", "outcome": "Tell apart pure substances, uniform mixtures and non-uniform mixtures" },
