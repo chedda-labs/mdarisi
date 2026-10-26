@@ -2,9 +2,13 @@
 // assets, so the app can copy the model to its private storage on first launch
 // with no network. Debug builds skip it to keep install times short.
 const { withAppBuildGradle } = require("expo/config-plugins");
-const model = require("../src/tutor/model.json");
+const models = require("../src/tutor/models.json");
 
 const MARKER = "// mdarisi: bundled model";
+const checks = Object.values(models)
+  .filter((m) => m.bundle)
+  .map((m) => `["${m.file}", ${m.size}L]`)
+  .join(", ");
 
 const gradle = `
 ${MARKER}
@@ -21,9 +25,11 @@ android {
 
 tasks.matching { it.name == "mergeReleaseAssets" }.configureEach {
     doFirst {
-        def model = new File(rootDir, "../bundle/models/${model.file}")
-        if (!model.exists() || model.length() != ${model.size}L) {
-            throw new GradleException("Bundled model missing or incomplete: run tools/fetch-model.sh")
+        [${checks}].each { name, size ->
+            def model = new File(rootDir, "../bundle/models/" + name)
+            if (!model.exists() || model.length() != size) {
+                throw new GradleException("Bundled model " + name + " missing or incomplete: run tools/fetch-model.sh")
+            }
         }
     }
 }

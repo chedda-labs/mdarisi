@@ -48,3 +48,6 @@ yarn-error.*
 
 # local Expo module build output
 /modules/*/android/build/
+
+# models not bundled in the APK (tools/fetch-model.sh)
+/.models/

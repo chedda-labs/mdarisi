@@ -31,7 +31,7 @@ export default function App() {
       try {
         setStatus("Preparing model…");
         let t0 = Date.now();
-        const modelPath = await resolveModelPath((pct) => {
+        const modelPath = await resolveModelPath("llm", (pct) => {
           if (!cancelled) setProgressPct(pct);
         });
         log(`prepare: ${((Date.now() - t0) / 1000).toFixed(1)} s`);
