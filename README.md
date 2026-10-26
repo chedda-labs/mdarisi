@@ -6,7 +6,19 @@ Built during [AI Yako: Own Your AI](https://dorahacks.io/hackathon/ai-yako/detai
 
 ## Status
 
-The app currently opens a benchmark screen (`src/bench/`). The learner-facing tutor screen comes next. What the benchmarks settled, measured on the demo phone:
+The app opens the tutor for one sub-strand (mixtures): suggested questions, typed questions, streamed answers grounded in the lesson text, a "Check yourself" question, and a "From the lesson" toggle naming the lesson sections used. Off-topic questions get "I don't know that yet. Ask your teacher." The quiz and "Explain" come next.
+
+Measured on the demo phone in airplane mode, fresh install:
+
+| | Result |
+| --- | --- |
+| First launch to ready (unpack models, load, read the lesson) | 68 s |
+| Later launches to ready | 32 s |
+| On-topic answer | 7–10 s |
+| Off-topic question refused | 3.6 s |
+| Peak app memory | about 1.9 GB |
+
+What the benchmarks settled:
 
 - **Tutor model: Qwen3 0.6B.** Llama 3.2 1B refused questions its lesson text answered and scored 1–2 of 5.
 - **Whole sub-strand in a cached prompt.** The lesson text for one sub-strand sits in a fixed system prompt cached with QVAC's `kvCache`. The phone reads it once (about 37 s, stored on disk and reused after restarts), then each question costs only its own ~15–20 tokens.
@@ -37,9 +49,9 @@ Without the cache, a ~550-token grounded prompt took 15–32 s before the first 
 | Relevance model | EmbeddingGemma 300M, Q4_0 GGUF (278 MB), catalog `EMBEDDINGGEMMA_300M_Q4_0`, Gemma Terms of Use |
 | Baseline (rejected) | Llama 3.2 1B Instruct, Q4_0 GGUF (773 MB), catalog `LLAMA_3_2_1B_INST_Q4_0`, Llama 3.2 Community License |
 
-Sources, pinned revisions and SHA-256s are in `src/tutor/models.json`. The release APK still bundles Llama from day 1; switching the bundle to Qwen3 and EmbeddingGemma comes with the tutor screen.
+Sources, pinned revisions and SHA-256s are in `src/tutor/models.json`. The release APK bundles Qwen3 0.6B and EmbeddingGemma; Llama is only used by the benchmarks.
 
-Files using QVAC: `src/tutor/` (model paths, prompt, relevance gate), `src/bench/` (benchmarks), `App.tsx`, `qvac.config.json`, `app.json` (Expo plugin).
+Files using QVAC: `src/tutor/session.ts` (load, prime the cached prompt, gate, stream answers, suspend and resume), `src/tutor/relevance.ts` (embedding gate), `src/tutor/prompt.ts`, `src/bench/` (benchmarks), `qvac.config.json`, `app.json` (Expo plugin).
 
 ## Content
 
@@ -79,7 +91,11 @@ cd android && ./gradlew assembleRelease --max-workers=2
 adb install -r app/build/outputs/apk/release/app-release.apk
 ```
 
-The APK is about 1 GB. The build fails if a bundled model is missing or the wrong size. `--max-workers=2` keeps Gradle within memory on a 16 GB laptop; without it the kernel's out-of-memory killer stopped the build.
+The APK is about 890 MB. The build fails if a bundled model is missing or the wrong size. `--max-workers=2` keeps Gradle within memory on a 16 GB laptop; without it the kernel's out-of-memory killer stopped the build.
+
+On Xiaomi phones, installing over USB needs a confirmation that fails in airplane mode (`INSTALL_FAILED_USER_RESTRICTED`). Install with the network on, then switch airplane mode on before opening the app.
+
+After changing `src/tutor/models.json`, run `npx expo prebuild --platform android` again so the release build packs the new list.
 
 ### Models for debug builds and benchmarks
 
@@ -97,12 +113,14 @@ The `chmod` steps are needed because folders created by adb aren't readable by t
 
 ### Benchmarks
 
-`App.tsx` runs one benchmark and writes JSON lines to logcat:
+Build with `EXPO_PUBLIC_SCREEN` set to open a benchmark instead of the tutor. Benchmarks write JSON lines to logcat and load models from the debug folder above, so push the models first.
 
-- `src/bench/runBench.ts`: model bake-off (models × thread counts, then quality questions). Summarise with `node tools/eval/bench-report.mjs <logcat.txt> [<meminfo.tsv>]`.
-- `src/bench/runCacheTest.ts`: cached sub-strand prompt plus relevance gate, in-scope and out-of-scope questions.
+- `EXPO_PUBLIC_SCREEN=bench`: model bake-off (`src/bench/runBench.ts`: models × thread counts, then quality questions). Summarise with `node tools/eval/bench-report.mjs <logcat.txt> [<meminfo.tsv>]`.
+- `EXPO_PUBLIC_SCREEN=cache`: cached sub-strand prompt plus relevance gate, in-scope and out-of-scope questions (`src/bench/runCacheTest.ts`).
 
 ```bash
+cd android && EXPO_PUBLIC_SCREEN=cache ./gradlew assembleRelease --max-workers=2 && cd ..
+adb install -r android/app/build/outputs/apk/release/app-release.apk
 adb logcat -c && adb logcat -v epoch ReactNativeJS:V '*:S' > logcat.txt &
 tools/eval/sample-mem.sh > meminfo.tsv &       # app memory every 2 s
 adb shell monkey -p com.mdarisi.app -c android.intent.category.LAUNCHER 1
