@@ -12,8 +12,11 @@ export async function runEval(session: TutorSession, emit: (r: EvalRecord) => vo
 
   onStatus("Preparing");
   const t0 = Date.now();
-  await session.prepare(subStrands, () => {});
-  emit({ phase: "prepare", ms: Date.now() - t0 });
+  const steps = await session.prepare(subStrands, () => {});
+  const ready = Date.now() - t0;
+  // Questions wait for the embedding model anyway; wait here so their timings don't include it.
+  const loadEmbed = await session.embedding;
+  emit({ phase: "prepare", ms: Date.now() - t0, ready, steps: { ...steps, loadEmbed } });
 
   const all = questions.subStrands.flatMap(({ subStrand, inScope, outOfScope }) => [
     ...inScope.map((q) => ({ subStrand, id: q.id, question: q.question, scope: "in" })),

@@ -90,4 +90,8 @@ console.log(`\n| Measure | ${groups.map(([id]) => id).join(" | ")} |`);
 console.log(`| --- |${" --- |".repeat(groups.length)}`);
 for (const m of Object.keys(columns[0])) console.log(`| ${m} | ${columns.map((c) => c[m]).join(" | ")} |`);
 const prepare = records.find((r) => r.phase === "prepare");
-if (prepare) console.log(`\nPrepare (load models, read lesson text): ${s(prepare.ms)} s`);
+if (prepare) {
+  // Runs before the embedding model loaded in the background have no "ready".
+  const ready = prepare.ready == null ? "" : `, ready to use after ${s(prepare.ready)} s`;
+  console.log(`\nPrepare (load models, read lesson text): ${s(prepare.ms)} s${ready}`);
+}

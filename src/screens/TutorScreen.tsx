@@ -47,7 +47,11 @@ export default function TutorScreen() {
         subStrands.map((s) => s.id),
         setPrepare,
       )
-      .then(() => setReady(true))
+      .then((timings) => {
+        console.log(`[prepare] ${JSON.stringify(timings)}`);
+        setReady(true);
+        session.embedding.then((ms) => console.log(`[prepare] ${JSON.stringify({ loadEmbed: ms })}`)).catch(() => {});
+      })
       .catch((e: any) => setError(e?.message ?? String(e)));
 
     const sub = AppState.addEventListener("change", (state) => {
