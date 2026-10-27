@@ -6,19 +6,26 @@ Built during [AI Yako: Own Your AI](https://dorahacks.io/hackathon/ai-yako/detai
 
 ## Status
 
-The app opens the tutor for one sub-strand (mixtures): suggested questions, typed questions, streamed answers grounded in the lesson text, a "Check yourself" question, and a "From the lesson" toggle naming the lesson sections used. Off-topic questions get "I don't know that yet. Ask your teacher." The quiz and "Explain" come next.
+The app covers two sub-strands of Grade 7 Integrated Science: mixtures, and elements and compounds. For each, a learner can:
 
-Measured on the demo phone in airplane mode, fresh install:
+- **Ask** the tutor: suggested or typed questions, streamed answers grounded in the lesson text, a "Check yourself" question, and a "From the lesson" toggle naming the lesson sections used. Questions the lessons don't cover get "I don't know that yet. Ask your teacher." If the other sub-strand's lesson matches a question clearly better, the answer comes from that lesson and says so.
+- Take a 5-question **quiz** marked from answer keys, never by the model. A wrong answer gets the hint first, then the correct answer.
+- Tap **Explain** on a wrong answer for the tutor's explanation, built from the item's teacher note.
+
+Measured on the demo phone in airplane mode with Wi-Fi and mobile data also off (27 Oct, commit `0840b52`):
 
 | | Result |
 | --- | --- |
-| First launch to ready (unpack models, load, read the lesson) | 68 s |
-| Later launches to ready | 32 s |
-| On-topic answer | 7–10 s |
-| Off-topic question refused | 3.6 s |
-| Peak app memory | about 1.9 GB |
+| First launch after a fresh install (unpack models, load, read both lessons) | 94 s |
+| Later launches to ready | about 9 s; some take 18–20 s |
+| On-topic answer, median | 1.7 s to the first word, 7.9 s in full |
+| Off-topic question refused | 0.1–0.4 s |
+| Peak app memory (total PSS, sampled every 2 s) | about 1.4 GB |
+| Test set | 35 / 42 answers with every key fact, 9 / 9 off-topic questions refused ([results](#results)) |
 
-What the benchmarks settled:
+Nearly all of the first launch is reading the two lessons into the KV cache, about 41 s each; later launches reuse it. The slower later launches spend 7–12 s on the first use of the tutor model, most likely because Android no longer has the model file in memory (not proven). Changing the prompt or the model settings makes the next launch read both lessons again.
+
+What the benchmarks settled (26 Oct, one sub-strand):
 
 - **Tutor model: Qwen3 0.6B.** Llama 3.2 1B refused questions its lesson text answered and scored 1–2 of 5.
 - **Whole sub-strand in a cached prompt.** The lesson text for one sub-strand sits in a fixed system prompt cached with QVAC's `kvCache`. The phone reads it once (about 37 s, stored on disk and reused after restarts), then each question costs only its own ~15–20 tokens.
@@ -132,6 +139,32 @@ adb shell monkey -p com.mdarisi.app -c android.intent.category.LAUNCHER 1
 
 - **Phone (reported numbers):** build with `EXPO_PUBLIC_SCREEN=eval` and capture logcat as above. This one uses the models bundled in the APK. Then `npm run eval:score -- logcat.txt`.
 - **Laptop (for iterating):** `npm run eval -- <label>` runs the same code on Node 24 with the models in `bundle/models`, then `npm run eval:score -- eval/results/<label>.jsonl`. Answers differ slightly from the phone's, so use it to compare changes, not to report.
+
+#### Results
+
+Demo phone, airplane mode with Wi-Fi and mobile data off, release APK at commit `0840b52`. Raw answers: `eval/results/phone-2026-10-27-tuned.jsonl`.
+
+| Measure | Mixtures | Elements and compounds | All |
+| --- | --- | --- | --- |
+| In scope: every key fact, no known error | 20 / 26 | 15 / 16 | **35 / 42** |
+| In scope: main point right | 23 / 26 | 16 / 16 | **39 / 42** |
+| In scope: wrongly refused | 0 | 0 | 0 |
+| Routed to the other sub-strand's lesson | 2 / 2 | 2 / 2 | 4 / 4 |
+| Out of scope: refused | 6 / 6 | 3 / 3 | **9 / 9** |
+| Relevance, in scope | 0.424–0.860 | 0.413–0.744 | 0.413–0.860 |
+| Relevance, out of scope | 0.161–0.330 | 0.138–0.304 | 0.138–0.330 |
+| Median first word (answered) | 1.7 s | 1.8 s | 1.7 s |
+| Median full answer (answered) | 8.0 s | 7.4 s | 7.9 s |
+
+Answers took 3.1–14.4 s in full, with the first word after 0.4–2.8 s. Every off-topic question was stopped by the relevance gate, so the tutor model was never asked.
+
+The seven that fail:
+
+- **Errors (2):** "Is githeri a uniform mixture?" opens with "Yes." and then correctly says it is non-uniform. "Is salt water a mixture? Why?" names filtering as a way to separate it.
+- **Missing a key fact (5):** muddy water clears because it is non-uniform (q9); a mixture can be separated because its substances are not chemically joined (q18); each substance keeps its own properties (q23); "What is an element?" gives no example element (e1, and r2, the same question asked from the Mixtures tab).
+
+Before tuning, the same phone scored 32 / 42 and 38 / 42 (`eval/results/phone-2026-10-27-vectors.jsonl`). Tuning reworded lesson text the model misread (sieving, githeri, the water molecule, non-metals) and added a "Yes." example to the prompt. Each variant was compared over four sampling seeds on the laptop, because any prompt change moves unrelated answers by about ±3 questions; those runs are in `eval/results/laptop-2026-10-27-tune-*.jsonl`. The scoring patterns were not changed during tuning.
+
 ## How the model gets onto the phone
 
 The QVAC registry download timed out on our network, so the model ships inside the release APK:
