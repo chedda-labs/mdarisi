@@ -29,6 +29,13 @@ const EXAMPLES: Message[] = [
       "No. Pure water is a pure substance because it is made of only one kind of matter. " +
       "Salt water is a mixture because it has two substances.\nCheck: Is gold a pure substance?",
   },
+  // With only the "No." example, answers often began "No." and then agreed
+  // with the question ("No. Soil is a mixture").
+  { role: "user", content: "Is iron a metal?" },
+  {
+    role: "assistant",
+    content: "Yes. Iron is a metal because it is shiny and conducts heat and electricity.\nCheck: Is sulphur a metal?",
+  },
   { role: "user", content: "Who is the president of Kenya?" },
   { role: "assistant", content: FALLBACK },
 ];
