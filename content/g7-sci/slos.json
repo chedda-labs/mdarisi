@@ -9,11 +9,49 @@
       "strand": "Mixtures, Elements and Compounds",
       "subStrand": "Mixtures",
       "namesConfirmed": false,
-      "suggestedQuestions": ["Is air a mixture?", "How can I separate sand from water?", "What is a solute?"],
+      "suggestedQuestions": [
+        "Is air a mixture?",
+        "How can I separate sand from water?",
+        "What is a solute?"
+      ],
       "slos": [
-        { "id": "g7.sci.mix.01", "outcome": "Describe a mixture and give everyday examples" },
-        { "id": "g7.sci.mix.02", "outcome": "Tell apart pure substances, uniform mixtures and non-uniform mixtures" },
-        { "id": "g7.sci.mix.03", "outcome": "Choose a suitable method to separate a simple mixture" }
+        {
+          "id": "g7.sci.mix.01",
+          "outcome": "Describe a mixture and give everyday examples"
+        },
+        {
+          "id": "g7.sci.mix.02",
+          "outcome": "Tell apart pure substances, uniform mixtures and non-uniform mixtures"
+        },
+        {
+          "id": "g7.sci.mix.03",
+          "outcome": "Choose a suitable method to separate a simple mixture"
+        }
+      ]
+    },
+    {
+      "id": "g7.sci.elc",
+      "strand": "Mixtures, Elements and Compounds",
+      "subStrand": "Elements and compounds",
+      "namesConfirmed": false,
+      "suggestedQuestions": [
+        "What is an element?",
+        "Is water an element or a compound?",
+        "How are metals different from non-metals?"
+      ],
+      "slos": [
+        {
+          "id": "g7.sci.elc.01",
+          "outcome": "Describe an element and name common elements with their symbols"
+        },
+        {
+          "id": "g7.sci.elc.02",
+          "outcome": "Describe a compound and tell compounds apart from mixtures"
+        },
+        {
+          "id": "g7.sci.elc.03",
+          "outcome": "Sort elements into metals and non-metals using their properties"
+        }
       ]
     }
   ]

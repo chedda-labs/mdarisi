@@ -5,8 +5,8 @@
     "curriculumVersion": "kicd-unconfirmed",
     "grade": 7,
     "learningArea": "Integrated Science",
-    "builtAt": "2026-10-26T16:46:26.169Z",
-    "drafts": 12
+    "builtAt": "2026-10-27T09:08:34.419Z",
+    "drafts": 24
   },
   "subStrands": [
     {
@@ -31,6 +31,31 @@
         {
           "id": "g7.sci.mix.03",
           "outcome": "Choose a suitable method to separate a simple mixture"
+        }
+      ]
+    },
+    {
+      "id": "g7.sci.elc",
+      "strand": "Mixtures, Elements and Compounds",
+      "subStrand": "Elements and compounds",
+      "namesConfirmed": false,
+      "suggestedQuestions": [
+        "What is an element?",
+        "Is water an element or a compound?",
+        "How are metals different from non-metals?"
+      ],
+      "slos": [
+        {
+          "id": "g7.sci.elc.01",
+          "outcome": "Describe an element and name common elements with their symbols"
+        },
+        {
+          "id": "g7.sci.elc.02",
+          "outcome": "Describe a compound and tell compounds apart from mixtures"
+        },
+        {
+          "id": "g7.sci.elc.03",
+          "outcome": "Sort elements into metals and non-metals using their properties"
         }
       ]
     }
@@ -246,6 +271,216 @@
       "explanation": "Heating the salt water makes the water evaporate and leaves the salt behind. Filtering and sieving cannot catch dissolved salt, and salt is not magnetic.",
       "status": "draft",
       "reviewedBy": null
+    },
+    {
+      "id": "itm_elc_l01",
+      "slos": [
+        "g7.sci.elc.01"
+      ],
+      "type": "lesson",
+      "lang": "en",
+      "title": "What is an element?",
+      "body": "An element is a pure substance that cannot be broken down into simpler substances. Each element is made of only one kind of atom. Scientists know of 118 elements, and everything around us is made from them. Oxygen, carbon, iron, copper, aluminium and gold are elements. Each element has a chemical symbol of one or two letters. The first letter is always a capital and the second is small. Hydrogen is H, oxygen is O, carbon is C, nitrogen is N, aluminium is Al and chlorine is Cl. Some symbols come from old Latin names: iron is Fe (ferrum), copper is Cu (cuprum), sodium is Na (natrium) and gold is Au (aurum). All the elements are arranged in a chart called the periodic table.",
+      "status": "draft",
+      "reviewedBy": null
+    },
+    {
+      "id": "itm_elc_l02",
+      "slos": [
+        "g7.sci.elc.02"
+      ],
+      "type": "lesson",
+      "lang": "en",
+      "title": "What is a compound?",
+      "body": "A compound is made when two or more elements join chemically. Water is a compound of hydrogen and oxygen. Its formula, H2O, shows that two hydrogen atoms are joined to one oxygen atom, and this ratio is always the same. Carbon dioxide, the gas we breathe out, is a compound of carbon and oxygen. Table salt is a compound called sodium chloride. A compound has new properties, different from the elements it is made of. Sodium is a soft metal that reacts strongly with water, and chlorine is a poisonous green gas, yet together they make salt that we can eat. Hydrogen and oxygen are both gases, but water is a liquid. A compound cannot be separated by sieving, filtering or evaporating. It can only be broken into its elements by a chemical change, such as passing electricity through water.",
+      "status": "draft",
+      "reviewedBy": null
+    },
+    {
+      "id": "itm_elc_l03",
+      "slos": [
+        "g7.sci.elc.03"
+      ],
+      "type": "lesson",
+      "lang": "en",
+      "title": "Metals and non-metals",
+      "body": "Elements can be sorted into metals and non-metals. Metals such as iron, copper, aluminium and gold are shiny. They conduct heat and electricity, which is why cooking sufurias are made of aluminium and electric wires are made of copper. Metals can be hammered into sheets without breaking, and they make a ringing sound when struck. Non-metals such as oxygen, nitrogen, carbon and sulphur are different. Many are gases. Solid non-metals, such as sulphur, are dull and break easily when hit. Most non-metals do not conduct heat or electricity. One exception is graphite, a form of carbon used in pencils, which conducts electricity.",
+      "status": "draft",
+      "reviewedBy": null
+    },
+    {
+      "id": "itm_elc_e01",
+      "slos": [
+        "g7.sci.elc.02"
+      ],
+      "type": "example",
+      "lang": "en",
+      "title": "Worked example: iron and sulphur, mixture or compound?",
+      "body": "Problem: How can we show the difference between a mixture of iron and sulphur and the compound they make? Step 1: Stir iron filings into yellow sulphur powder. You can still see grey and yellow bits. A magnet pulls the iron out, so this is a mixture. Step 2: Your teacher heats some of the mixture strongly. It glows and turns into a black solid called iron sulphide. Step 3: Hold a magnet over the black solid. It does not pull out any iron. Why it works: in the mixture, the iron and sulphur are not joined, so each keeps its own properties. When heated, they join chemically to make a compound with new properties, so the magnet can no longer separate them.",
+      "status": "draft",
+      "reviewedBy": null
+    },
+    {
+      "id": "itm_elc_m01",
+      "slos": [
+        "g7.sci.elc.02"
+      ],
+      "type": "misconception",
+      "lang": "en",
+      "title": "Misconception: a compound is a mixture of elements",
+      "body": "Some learners think a compound is just elements mixed together. This is not right. In a mixture, the substances are not joined, each keeps its own properties, the amounts can change, and they can be separated by physical methods. In a compound, the elements are joined chemically, always in the same ratio, the compound has new properties, and it can only be separated by a chemical change. Salt water is a mixture of salt and water, but salt itself is a compound of sodium and chlorine.",
+      "status": "draft",
+      "reviewedBy": null
+    },
+    {
+      "id": "itm_elc_m02",
+      "slos": [
+        "g7.sci.elc.01"
+      ],
+      "type": "misconception",
+      "lang": "en",
+      "title": "Misconception: water and air are elements",
+      "body": "Long ago, people thought water and air were elements. They are not. Water is a compound: passing electricity through water breaks it into two elements, hydrogen and oxygen. Air is a mixture of gases, mostly nitrogen and oxygen, with some carbon dioxide and water vapour. Its gases are not joined chemically, and the amounts change from place to place.",
+      "status": "draft",
+      "reviewedBy": null
+    },
+    {
+      "id": "itm_elc_p01",
+      "slos": [
+        "g7.sci.elc.01"
+      ],
+      "type": "practice",
+      "lang": "en",
+      "prompt": "Which of these is an element?",
+      "choices": [
+        "Water",
+        "Copper",
+        "Salt water",
+        "Carbon dioxide"
+      ],
+      "answer": {
+        "kind": "mcq",
+        "value": 1
+      },
+      "hints": [
+        "An element cannot be broken down into simpler substances."
+      ],
+      "explanation": "Copper is an element: it is made of only one kind of atom and cannot be broken into simpler substances. Water and carbon dioxide are compounds, and salt water is a mixture.",
+      "status": "draft",
+      "reviewedBy": null
+    },
+    {
+      "id": "itm_elc_p02",
+      "slos": [
+        "g7.sci.elc.01"
+      ],
+      "type": "practice",
+      "lang": "en",
+      "prompt": "What is the chemical symbol for iron?",
+      "choices": [
+        "I",
+        "Ir",
+        "Fe",
+        "In"
+      ],
+      "answer": {
+        "kind": "mcq",
+        "value": 2
+      },
+      "hints": [
+        "The symbol comes from iron's old Latin name, ferrum."
+      ],
+      "explanation": "Iron's symbol is Fe, from its old Latin name ferrum.",
+      "status": "draft",
+      "reviewedBy": null
+    },
+    {
+      "id": "itm_elc_p03",
+      "slos": [
+        "g7.sci.elc.02"
+      ],
+      "type": "practice",
+      "lang": "en",
+      "prompt": "True or false: water is an element.",
+      "answer": {
+        "kind": "truefalse",
+        "value": false
+      },
+      "hints": [
+        "Can water be broken into simpler substances?"
+      ],
+      "explanation": "False. Water is a compound of hydrogen and oxygen. Passing electricity through water breaks it into these two elements.",
+      "status": "draft",
+      "reviewedBy": null
+    },
+    {
+      "id": "itm_elc_p04",
+      "slos": [
+        "g7.sci.elc.03"
+      ],
+      "type": "practice",
+      "lang": "en",
+      "prompt": "Which property shows that copper is a metal?",
+      "choices": [
+        "It is dull",
+        "It conducts electricity",
+        "It breaks easily when hit",
+        "It is a gas"
+      ],
+      "answer": {
+        "kind": "mcq",
+        "value": 1
+      },
+      "hints": [
+        "Think about why electric wires are made of copper."
+      ],
+      "explanation": "Copper conducts electricity, which is a property of metals. That is why electric wires are made of copper.",
+      "status": "draft",
+      "reviewedBy": null
+    },
+    {
+      "id": "itm_elc_p05",
+      "slos": [
+        "g7.sci.elc.02"
+      ],
+      "type": "practice",
+      "lang": "en",
+      "prompt": "Each water molecule (H2O) has 2 hydrogen atoms and 1 oxygen atom. How many hydrogen atoms are in 5 water molecules?",
+      "answer": {
+        "kind": "numeric",
+        "value": 10
+      },
+      "hints": [
+        "Multiply the number of molecules by the hydrogen atoms in each one."
+      ],
+      "explanation": "Each water molecule has 2 hydrogen atoms, so 5 molecules have 5 × 2 = 10 hydrogen atoms. The ratio in a compound is always the same.",
+      "status": "draft",
+      "reviewedBy": null
+    },
+    {
+      "id": "itm_elc_p06",
+      "slos": [
+        "g7.sci.elc.02"
+      ],
+      "type": "practice",
+      "lang": "en",
+      "prompt": "Iron filings and sulphur are heated and turn into iron sulphide. Why can a magnet no longer pull out the iron?",
+      "choices": [
+        "The iron has melted away",
+        "The iron is now chemically joined in a compound",
+        "The magnet is too weak",
+        "The sulphur covers the iron"
+      ],
+      "answer": {
+        "kind": "mcq",
+        "value": 1
+      },
+      "hints": [
+        "What happens to the iron and sulphur when they are heated together?"
+      ],
+      "explanation": "When heated, the iron and sulphur join chemically to make a compound with new properties, so the iron can no longer be pulled out by a magnet.",
+      "status": "draft",
+      "reviewedBy": null
     }
   ],
   "chunks": [
@@ -332,6 +567,90 @@
       "subStrand": "g7.sci.mix",
       "title": "Explanation: How can you get salt back from salt water?",
       "text": "Heating the salt water makes the water evaporate and leaves the salt behind. Filtering and sieving cannot catch dissolved salt, and salt is not magnetic."
+    },
+    {
+      "id": "itm_elc_l01",
+      "itemId": "itm_elc_l01",
+      "subStrand": "g7.sci.elc",
+      "title": "What is an element?",
+      "text": "An element is a pure substance that cannot be broken down into simpler substances. Each element is made of only one kind of atom. Scientists know of 118 elements, and everything around us is made from them. Oxygen, carbon, iron, copper, aluminium and gold are elements. Each element has a chemical symbol of one or two letters. The first letter is always a capital and the second is small. Hydrogen is H, oxygen is O, carbon is C, nitrogen is N, aluminium is Al and chlorine is Cl. Some symbols come from old Latin names: iron is Fe (ferrum), copper is Cu (cuprum), sodium is Na (natrium) and gold is Au (aurum). All the elements are arranged in a chart called the periodic table."
+    },
+    {
+      "id": "itm_elc_l02",
+      "itemId": "itm_elc_l02",
+      "subStrand": "g7.sci.elc",
+      "title": "What is a compound?",
+      "text": "A compound is made when two or more elements join chemically. Water is a compound of hydrogen and oxygen. Its formula, H2O, shows that two hydrogen atoms are joined to one oxygen atom, and this ratio is always the same. Carbon dioxide, the gas we breathe out, is a compound of carbon and oxygen. Table salt is a compound called sodium chloride. A compound has new properties, different from the elements it is made of. Sodium is a soft metal that reacts strongly with water, and chlorine is a poisonous green gas, yet together they make salt that we can eat. Hydrogen and oxygen are both gases, but water is a liquid. A compound cannot be separated by sieving, filtering or evaporating. It can only be broken into its elements by a chemical change, such as passing electricity through water."
+    },
+    {
+      "id": "itm_elc_l03",
+      "itemId": "itm_elc_l03",
+      "subStrand": "g7.sci.elc",
+      "title": "Metals and non-metals",
+      "text": "Elements can be sorted into metals and non-metals. Metals such as iron, copper, aluminium and gold are shiny. They conduct heat and electricity, which is why cooking sufurias are made of aluminium and electric wires are made of copper. Metals can be hammered into sheets without breaking, and they make a ringing sound when struck. Non-metals such as oxygen, nitrogen, carbon and sulphur are different. Many are gases. Solid non-metals, such as sulphur, are dull and break easily when hit. Most non-metals do not conduct heat or electricity. One exception is graphite, a form of carbon used in pencils, which conducts electricity."
+    },
+    {
+      "id": "itm_elc_e01",
+      "itemId": "itm_elc_e01",
+      "subStrand": "g7.sci.elc",
+      "title": "Worked example: iron and sulphur, mixture or compound?",
+      "text": "Problem: How can we show the difference between a mixture of iron and sulphur and the compound they make? Step 1: Stir iron filings into yellow sulphur powder. You can still see grey and yellow bits. A magnet pulls the iron out, so this is a mixture. Step 2: Your teacher heats some of the mixture strongly. It glows and turns into a black solid called iron sulphide. Step 3: Hold a magnet over the black solid. It does not pull out any iron. Why it works: in the mixture, the iron and sulphur are not joined, so each keeps its own properties. When heated, they join chemically to make a compound with new properties, so the magnet can no longer separate them."
+    },
+    {
+      "id": "itm_elc_m01",
+      "itemId": "itm_elc_m01",
+      "subStrand": "g7.sci.elc",
+      "title": "Misconception: a compound is a mixture of elements",
+      "text": "Some learners think a compound is just elements mixed together. This is not right. In a mixture, the substances are not joined, each keeps its own properties, the amounts can change, and they can be separated by physical methods. In a compound, the elements are joined chemically, always in the same ratio, the compound has new properties, and it can only be separated by a chemical change. Salt water is a mixture of salt and water, but salt itself is a compound of sodium and chlorine."
+    },
+    {
+      "id": "itm_elc_m02",
+      "itemId": "itm_elc_m02",
+      "subStrand": "g7.sci.elc",
+      "title": "Misconception: water and air are elements",
+      "text": "Long ago, people thought water and air were elements. They are not. Water is a compound: passing electricity through water breaks it into two elements, hydrogen and oxygen. Air is a mixture of gases, mostly nitrogen and oxygen, with some carbon dioxide and water vapour. Its gases are not joined chemically, and the amounts change from place to place."
+    },
+    {
+      "id": "itm_elc_p01",
+      "itemId": "itm_elc_p01",
+      "subStrand": "g7.sci.elc",
+      "title": "Explanation: Which of these is an element?",
+      "text": "Copper is an element: it is made of only one kind of atom and cannot be broken into simpler substances. Water and carbon dioxide are compounds, and salt water is a mixture."
+    },
+    {
+      "id": "itm_elc_p02",
+      "itemId": "itm_elc_p02",
+      "subStrand": "g7.sci.elc",
+      "title": "Explanation: What is the chemical symbol for iron?",
+      "text": "Iron's symbol is Fe, from its old Latin name ferrum."
+    },
+    {
+      "id": "itm_elc_p03",
+      "itemId": "itm_elc_p03",
+      "subStrand": "g7.sci.elc",
+      "title": "Explanation: True or false: water is an element.",
+      "text": "False. Water is a compound of hydrogen and oxygen. Passing electricity through water breaks it into these two elements."
+    },
+    {
+      "id": "itm_elc_p04",
+      "itemId": "itm_elc_p04",
+      "subStrand": "g7.sci.elc",
+      "title": "Explanation: Which property shows that copper is a metal?",
+      "text": "Copper conducts electricity, which is a property of metals. That is why electric wires are made of copper."
+    },
+    {
+      "id": "itm_elc_p05",
+      "itemId": "itm_elc_p05",
+      "subStrand": "g7.sci.elc",
+      "title": "Explanation: Each water molecule (H2O) has 2 hydrogen atoms and 1 oxygen atom. How many hydrogen atoms are in 5 water molecules?",
+      "text": "Each water molecule has 2 hydrogen atoms, so 5 molecules have 5 × 2 = 10 hydrogen atoms. The ratio in a compound is always the same."
+    },
+    {
+      "id": "itm_elc_p06",
+      "itemId": "itm_elc_p06",
+      "subStrand": "g7.sci.elc",
+      "title": "Explanation: Iron filings and sulphur are heated and turn into iron sulphide. Why can a magnet no longer pull out the iron?",
+      "text": "When heated, the iron and sulphur join chemically to make a compound with new properties, so the iron can no longer be pulled out by a magnet."
     }
   ]
 }
