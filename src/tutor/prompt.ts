@@ -49,14 +49,15 @@ export function explainRequest(q: {
   explanation: string;
 }): string {
   // Written about the learner, not as them: in the first person the model
-  // answered as the learner and invented what they had been thinking.
+  // answered as the learner and invented what they had been thinking. Given
+  // no opening words it began "You are wrong" (or, falsely, "You are correct"),
+  // and telling it not to made that more likely.
   return (
-    `A learner got this quiz question wrong.\nQuestion: ${q.prompt}\n` +
+    `A learner answered this quiz question.\nQuestion: ${q.prompt}\n` +
     `Learner's answer: ${q.learnerAnswer}\nCorrect answer: ${q.correctAnswer}\n` +
     `Teacher's note: ${q.explanation}\n` +
-    'Talk to the learner as "you". Using the teacher\'s note, explain why the correct answer is right ' +
-    "and why the learner's answer is wrong. Do not guess what the learner was thinking. " +
-    "Do not repeat the question or the correct answer on its own line."
+    `Using the teacher's note, explain in 2 or 3 short sentences, talking to the learner as "you". ` +
+    `Begin with "${q.correctAnswer} is the answer because". Then say why "${q.learnerAnswer}" does not fit.`
   );
 }
 
