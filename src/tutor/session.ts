@@ -37,6 +37,9 @@ export type Answer = {
   kind: "answer" | "fallback";
   text: string;
   sources: { title: string; score: number }[];
+  // Best match between the question and the lesson text; below
+  // RELEVANCE_THRESHOLD the model isn't asked.
+  relevance: number;
   timings: { relevanceMs: number; firstWordMs?: number; totalMs: number; promptTokens?: number };
 };
 
@@ -92,7 +95,7 @@ export class TutorSession {
 
       if (rel.score < RELEVANCE_THRESHOLD) {
         onText(FALLBACK);
-        return { kind: "fallback", text: FALLBACK, sources: [], timings: { relevanceMs, totalMs: Date.now() - t0 } };
+        return { kind: "fallback", text: FALLBACK, sources: [], relevance: rel.score, timings: { relevanceMs, totalMs: Date.now() - t0 } };
       }
 
       const { text, firstWordMs, promptTokens } = await this.stream(subStrand, question, t0, onText);
@@ -101,6 +104,7 @@ export class TutorSession {
         kind,
         text,
         sources: kind === "answer" ? sources : [],
+        relevance: rel.score,
         timings: { relevanceMs, firstWordMs, totalMs: Date.now() - t0, promptTokens },
       };
     });

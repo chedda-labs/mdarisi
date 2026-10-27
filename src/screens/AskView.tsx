@@ -37,7 +37,7 @@ export default function AskView({
       setTurn({
         question: text,
         text: "",
-        done: { kind: "fallback", text: `Something went wrong: ${e?.message ?? e}`, sources: [], timings: { relevanceMs: 0, totalMs: 0 } },
+        done: { kind: "fallback", text: `Something went wrong: ${e?.message ?? e}`, sources: [], relevance: 0, timings: { relevanceMs: 0, totalMs: 0 } },
       });
     }
   }
