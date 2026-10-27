@@ -128,7 +128,7 @@ adb shell monkey -p com.mdarisi.app -c android.intent.category.LAUNCHER 1
 
 ### Test set
 
-`eval/questions.json` holds 24 in-scope questions on the mixtures sub-strand and 8 out-of-scope ones. An in-scope answer passes when it isn't refused, every key fact matches one of its patterns, and none of the question's known wrong statements appears. An out-of-scope question passes when the tutor refuses. `src/eval/runEval.ts` asks every question through the app's own `TutorSession` (relevance gate, cached prompt, generation settings); `tools/eval/score.mjs` marks the run and prints Markdown.
+`eval/questions.json` holds 38 in-scope and 13 out-of-scope questions, grouped by sub-strand. Each sub-strand's tutor answers only from its own lesson text, so questions from the other sub-strand count as out of scope. An in-scope answer passes when it isn't refused, every key fact matches one of its patterns, and none of the question's known wrong statements appears. An out-of-scope question passes when the tutor refuses. `src/eval/runEval.ts` asks every question through the app's own `TutorSession` (relevance gate, cached prompt, generation settings); `tools/eval/score.mjs` marks the run and prints Markdown.
 
 - **Phone (reported numbers):** build with `EXPO_PUBLIC_SCREEN=eval` and capture logcat as above. This one uses the models bundled in the APK. Then `npm run eval:score -- logcat.txt`.
 - **Laptop (for iterating):** `npm run eval -- <label>` runs the same code on Node 24 with the models in `bundle/models`, then `npm run eval:score -- eval/results/<label>.jsonl`. Answers differ slightly from the phone's, so use it to compare changes, not to report.
