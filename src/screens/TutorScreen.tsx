@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import type { PracticeItem } from "../assessment/mark";
 import pack from "../packs/g7-sci/pack.json";
+import { resolveModelPath } from "../tutor/model";
 import { TutorSession, type PrepareStep } from "../tutor/session";
 import AskView from "./AskView";
 import QuizView from "./QuizView";
@@ -31,7 +32,7 @@ function practiceItems(subStrand: string): PracticeItem[] {
 }
 
 export default function TutorScreen() {
-  const session = useRef(new TutorSession(pack)).current;
+  const session = useRef(new TutorSession(pack, resolveModelPath)).current;
   const [prepare, setPrepare] = useState<PrepareStep | null>(null);
   const [ready, setReady] = useState(false);
   const [error, setError] = useState<string | null>(null);

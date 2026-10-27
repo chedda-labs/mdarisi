@@ -1,11 +1,15 @@
 import { completion, loadModel, resume, suspend, VERBOSITY } from "@qvac/sdk";
 
 import { subStrandContext } from "./context";
-import { resolveModelPath } from "./model";
+import type { ModelRole } from "./model";
 import { buildPrompt, FALLBACK } from "./prompt";
 import { buildIndex, EMBED_CONFIG, relevance, RELEVANCE_THRESHOLD, type RelevanceIndex } from "./relevance";
 
 type Pack = Parameters<typeof subStrandContext>[0];
+
+// Where a model file is on this device. The app copies bundled models out of
+// the APK; the laptop eval runner reads them from bundle/models.
+export type ResolveModelPath = (role: ModelRole, onCopyProgress: (percentage: number) => void) => Promise<string>;
 
 // Six threads balanced prompt reading against writing speed on the demo
 // phone (Snapdragon 685). 2048 tokens holds a sub-strand's lesson text
@@ -44,16 +48,19 @@ export class TutorSession {
   // while another is running waits for it instead of failing.
   private queue: Promise<unknown> = Promise.resolve();
 
-  constructor(private pack: Pack) {}
+  constructor(
+    private pack: Pack,
+    private resolveModelPath: ResolveModelPath,
+  ) {}
 
   // Copies models out of the APK on first launch, loads them, then reads each
   // sub-strand's lesson text once. The read is cached on disk by kvCache, so
   // later launches skip most of it.
   async prepare(subStrands: string[], onStep: (s: PrepareStep) => void) {
-    const tutorPath = await resolveModelPath("tutor", (percentage) =>
+    const tutorPath = await this.resolveModelPath("tutor", (percentage) =>
       onStep({ step: "copy", model: "tutor", percentage }),
     );
-    const embedPath = await resolveModelPath("embed", (percentage) =>
+    const embedPath = await this.resolveModelPath("embed", (percentage) =>
       onStep({ step: "copy", model: "embed", percentage }),
     );
 
