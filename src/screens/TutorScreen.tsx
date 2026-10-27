@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { ActivityIndicator, AppState, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { AppState, Keyboard, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import type { PracticeItem } from "../assessment/mark";
@@ -7,24 +8,16 @@ import pack from "../packs/g7-sci/pack.json";
 import { resolveModelPath } from "../tutor/model";
 import { TutorSession, type PrepareStep } from "../tutor/session";
 import AskView from "./AskView";
-import QuizView from "./QuizView";
-import { colors, radius, space } from "./theme";
+import CompleteScreen from "./CompleteScreen";
+import LoadingScreen from "./LoadingScreen";
+import QuizView, { type QuizResult } from "./QuizView";
+import { colors, fonts, radius, space, type } from "./theme";
+import { AppIcon, Wordmark, XpPill } from "./ui";
 
+const QUIZ_LENGTH = 5;
 const subStrands = pack.subStrands;
+const lessonIds = subStrands.map((s) => s.id);
 const subStrandNames = Object.fromEntries(subStrands.map((s) => [s.id, s.subStrand]));
-
-function prepareLabel(s: PrepareStep): string {
-  switch (s.step) {
-    case "copy":
-      return `Unpacking the tutor, first launch only (${s.percentage}%)`;
-    case "load":
-      return "Starting the tutor";
-    case "read": {
-      const name = subStrands.find((ss) => ss.id === s.subStrand)?.subStrand ?? s.subStrand;
-      return `Reading the lesson: ${name}. The first launch takes about a minute.`;
-    }
-  }
-}
 
 // Practice items for a sub-strand, in authored order.
 function practiceItems(subStrand: string): PracticeItem[] {
@@ -32,21 +25,31 @@ function practiceItems(subStrand: string): PracticeItem[] {
   return pack.items.filter((it) => it.type === "practice" && it.slos.some((id) => sloIds.has(id))) as PracticeItem[];
 }
 
+// One suggested question a day for the opening screen.
+function todaysMystery(): string | undefined {
+  const all = subStrands.flatMap((s) => s.suggestedQuestions ?? []);
+  const day = Math.floor(Date.now() / 86_400_000);
+  return all.length ? all[day % all.length] : undefined;
+}
+
 export default function TutorScreen() {
   const session = useRef(new TutorSession(pack, resolveModelPath)).current;
+  const mystery = useMemo(todaysMystery, []);
   const [prepare, setPrepare] = useState<PrepareStep | null>(null);
   const [ready, setReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [subStrand, setSubStrand] = useState(subStrands[0].id);
   const [tab, setTab] = useState<"ask" | "quiz">("ask");
-  const items = useMemo(() => practiceItems(subStrand), [subStrand]);
+  const [xp, setXp] = useState(0);
+  // A new run remounts the quiz; a retry runs only the items missed first time.
+  const [quizRun, setQuizRun] = useState({ n: 0, items: null as PracticeItem[] | null });
+  const [result, setResult] = useState<QuizResult | null>(null);
+  const [keyboard, setKeyboard] = useState(0);
+  const quizItems = useMemo(() => quizRun.items ?? practiceItems(subStrand).slice(0, QUIZ_LENGTH), [quizRun, subStrand]);
 
   useEffect(() => {
     session
-      .prepare(
-        subStrands.map((s) => s.id),
-        setPrepare,
-      )
+      .prepare(lessonIds, setPrepare)
       .then((timings) => {
         console.log(`[prepare] ${JSON.stringify(timings)}`);
         setReady(true);
@@ -61,61 +64,78 @@ export default function TutorScreen() {
     return () => sub.remove();
   }, [session]);
 
-  if (error) {
-    return (
-      <SafeAreaView style={styles.center}>
-        <Text style={styles.title}>Mdarisi</Text>
-        <Text style={styles.errorText}>The tutor could not start: {error}</Text>
-      </SafeAreaView>
-    );
-  }
+  useEffect(() => {
+    const show = Keyboard.addListener("keyboardDidShow", (e) => setKeyboard(e.endCoordinates.height));
+    const hide = Keyboard.addListener("keyboardDidHide", () => setKeyboard(0));
+    return () => {
+      show.remove();
+      hide.remove();
+    };
+  }, []);
 
-  if (!ready) {
-    return (
-      <SafeAreaView style={styles.center}>
-        <Text style={styles.title}>Mdarisi</Text>
-        <Text style={styles.tagline}>Mwalimu mfukoni, hata bila mtandao</Text>
-        <ActivityIndicator size="large" color={colors.accent} style={{ marginTop: space.xl }} />
-        <Text style={styles.prepareText}>{prepare ? prepareLabel(prepare) : "Getting ready"}</Text>
-        {prepare?.step === "copy" && (
-          <View style={styles.progressTrack}>
-            <View style={[styles.progressFill, { width: `${prepare.percentage}%` }]} />
-          </View>
-        )}
-      </SafeAreaView>
-    );
+  if (!ready || error) {
+    return <LoadingScreen step={prepare} error={error} lessons={lessonIds} names={subStrandNames} mystery={mystery} />;
   }
 
   const current = subStrands.find((s) => s.id === subStrand)!;
+  const nextId = lessonIds[(lessonIds.indexOf(subStrand) + 1) % lessonIds.length];
+  const addXp = (n: number) => setXp((x) => x + n);
+
+  function openLesson(id: string) {
+    setSubStrand(id);
+    setQuizRun((r) => ({ n: r.n + 1, items: null }));
+    setResult(null);
+  }
 
   return (
     <SafeAreaView style={styles.safe} edges={["top", "bottom"]}>
-      <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === "ios" ? "padding" : undefined}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Mdarisi</Text>
-          <Text style={styles.subtitle}>
+      <StatusBar style="dark" />
+      {/* Edge-to-edge Android doesn't resize the window for the keyboard, and
+          KeyboardAvoidingView left a gap after it closed, so pad by its height.
+          The header hides while typing so the chat keeps some room. */}
+      <View style={[styles.flex, keyboard > 0 && { paddingBottom: keyboard }]}>
+        <View style={[styles.header, keyboard > 0 && styles.hidden]}>
+          <View style={styles.brandRow}>
+            <AppIcon size={34} />
+            <Wordmark size={24} color={colors.ink} />
+            <View style={styles.flex} />
+            <XpPill xp={xp} />
+          </View>
+          <Text style={type.eyebrow}>
             Grade {pack.manifest.grade} {pack.manifest.learningArea} · {current.strand}
           </Text>
-          {subStrands.length > 1 && (
-            <View style={styles.chips}>
-              {subStrands.map((s) => (
-                <Pressable key={s.id} onPress={() => setSubStrand(s.id)} style={[styles.chip, s.id === subStrand && styles.chipActive]}>
-                  <Text style={[styles.chipText, s.id === subStrand && styles.chipTextActive]}>{s.subStrand}</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
+            {subStrands.map((s) => {
+              const active = s.id === subStrand;
+              return (
+                <Pressable
+                  key={s.id}
+                  onPress={() => active || openLesson(s.id)}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: active }}
+                  style={[styles.chip, active && styles.chipActive]}
+                >
+                  <Text style={[styles.chipText, active && styles.chipTextActive]}>{s.subStrand}</Text>
                 </Pressable>
-              ))}
-            </View>
-          )}
-          <Text style={styles.topic}>{current.subStrand}</Text>
-          <View style={styles.tabs}>
+              );
+            })}
+          </ScrollView>
+          <View style={styles.tabs} accessibilityRole="tablist">
             {(["ask", "quiz"] as const).map((t) => (
-              <Pressable key={t} onPress={() => setTab(t)} style={[styles.tab, tab === t && styles.tabActive]}>
-                <Text style={[styles.tabText, tab === t && styles.tabTextActive]}>{t === "ask" ? "Ask" : "Quiz"}</Text>
+              <Pressable
+                key={t}
+                onPress={() => setTab(t)}
+                accessibilityRole="tab"
+                accessibilityState={{ selected: tab === t }}
+                style={[styles.tab, tab === t && styles.tabActive]}
+              >
+                <Text style={[styles.tabText, tab === t && styles.tabTextActive]}>{t === "ask" ? "Ask Mwalimu" : "Quiz"}</Text>
               </Pressable>
             ))}
           </View>
         </View>
 
-        {/* Both stay mounted so switching tabs keeps the answer and quiz progress. */}
+        {/* Both stay mounted so switching tabs keeps the chat and quiz progress. */}
         <View style={[styles.flex, tab !== "ask" && styles.hidden]}>
           <AskView
             key={subStrand}
@@ -123,12 +143,36 @@ export default function TutorScreen() {
             subStrand={subStrand}
             subStrandNames={subStrandNames}
             suggestedQuestions={current.suggestedQuestions ?? []}
+            onXp={addXp}
           />
         </View>
         <View style={[styles.flex, tab !== "quiz" && styles.hidden]}>
-          <QuizView key={subStrand} session={session} subStrand={subStrand} items={items} />
+          <QuizView
+            key={`${subStrand}-${quizRun.n}`}
+            session={session}
+            subStrand={subStrand}
+            subStrandName={current.subStrand}
+            items={quizItems}
+            onXp={addXp}
+            onFinish={setResult}
+          />
         </View>
-      </KeyboardAvoidingView>
+      </View>
+
+      {result && (
+        <View style={StyleSheet.absoluteFill}>
+          <CompleteScreen
+            result={result}
+            subStrandName={current.subStrand}
+            nextName={subStrandNames[nextId]}
+            onNext={() => openLesson(nextId)}
+            onRetry={() => {
+              setQuizRun((r) => ({ n: r.n + 1, items: result.tricky.length ? result.tricky : null }));
+              setResult(null);
+            }}
+          />
+        </View>
+      )}
     </SafeAreaView>
   );
 }
@@ -136,25 +180,25 @@ export default function TutorScreen() {
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   hidden: { display: "none" },
-  safe: { flex: 1, backgroundColor: colors.bg },
-  center: { flex: 1, backgroundColor: colors.bg, alignItems: "center", justifyContent: "center", padding: space.xl },
-  title: { fontSize: 26, fontWeight: "700", color: colors.accent },
-  tagline: { fontSize: 15, color: colors.muted, marginTop: space.xs, fontStyle: "italic" },
-  prepareText: { fontSize: 16, color: colors.text, marginTop: space.lg, textAlign: "center", lineHeight: 22 },
-  progressTrack: { width: "80%", height: 8, borderRadius: radius.pill, backgroundColor: colors.border, marginTop: space.md },
-  progressFill: { height: 8, borderRadius: radius.pill, backgroundColor: colors.accent },
-  errorText: { fontSize: 16, color: colors.text, marginTop: space.lg, textAlign: "center" },
-  header: { paddingHorizontal: space.lg, paddingTop: space.md, gap: space.sm },
-  subtitle: { fontSize: 14, color: colors.muted },
-  chips: { flexDirection: "row", flexWrap: "wrap", gap: space.sm },
-  chip: { paddingHorizontal: space.md, paddingVertical: space.sm, borderRadius: radius.pill, borderWidth: 1, borderColor: colors.border },
-  chipActive: { backgroundColor: colors.accent, borderColor: colors.accent },
-  chipText: { color: colors.text, fontSize: 14 },
-  chipTextActive: { color: colors.accentText },
-  topic: { fontSize: 20, fontWeight: "700", color: colors.text, marginTop: space.xs },
-  tabs: { flexDirection: "row", borderBottomWidth: 1, borderBottomColor: colors.border },
-  tab: { paddingVertical: space.sm, paddingHorizontal: space.lg, borderBottomWidth: 3, borderBottomColor: "transparent" },
-  tabActive: { borderBottomColor: colors.accent },
-  tabText: { fontSize: 16, color: colors.muted, fontWeight: "600" },
-  tabTextActive: { color: colors.accent },
+  safe: { flex: 1, backgroundColor: colors.ground },
+  header: { paddingHorizontal: space.lg, paddingTop: space.md, paddingBottom: space.md, gap: 10 },
+  brandRow: { flexDirection: "row", alignItems: "center", gap: 10 },
+  chips: { gap: space.sm },
+  chip: {
+    height: 40,
+    justifyContent: "center",
+    paddingHorizontal: 14,
+    borderRadius: radius.pill,
+    borderWidth: 2,
+    borderColor: colors.line,
+    backgroundColor: colors.surface,
+  },
+  chipActive: { backgroundColor: colors.green700, borderColor: colors.green700 },
+  chipText: { fontFamily: fonts.body800, fontSize: 14, color: colors.ink },
+  chipTextActive: { color: colors.surface },
+  tabs: { flexDirection: "row", backgroundColor: colors.line, borderRadius: radius.md, padding: 4 },
+  tab: { flex: 1, height: 44, borderRadius: 12, alignItems: "center", justifyContent: "center" },
+  tabActive: { backgroundColor: colors.surface, borderBottomWidth: 3, borderBottomColor: colors.green700 },
+  tabText: { fontFamily: fonts.heading800, fontSize: 17, color: colors.muted },
+  tabTextActive: { color: colors.green900 },
 });

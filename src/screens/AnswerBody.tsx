@@ -1,7 +1,7 @@
 import React from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
-import { colors, radius, space } from "./theme";
+import { colors, radius, space, type } from "./theme";
 
 const normalise = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 
@@ -19,12 +19,12 @@ export default function AnswerBody({ text, question, muted }: { text: string; qu
   const { body, check } = splitCheck(text, question);
   return (
     <>
-      {!text && <ActivityIndicator color={colors.accent} />}
-      {!!body && <Text style={[styles.text, muted && styles.muted]}>{body}</Text>}
+      {!text && <ActivityIndicator color={colors.green700} style={styles.waiting} />}
+      {!!body && <Text style={[type.body, muted && styles.muted]}>{body}</Text>}
       {!!check && (
         <View style={styles.check}>
-          <Text style={styles.checkLabel}>Check yourself</Text>
-          <Text style={styles.text}>{check}</Text>
+          <Text style={[type.eyebrow, styles.checkLabel]}>Check yourself</Text>
+          <Text style={type.body}>{check}</Text>
         </View>
       )}
     </>
@@ -32,8 +32,8 @@ export default function AnswerBody({ text, question, muted }: { text: string; qu
 }
 
 const styles = StyleSheet.create({
-  text: { fontSize: 17, color: colors.text, lineHeight: 25 },
-  muted: { color: colors.fallbackText },
-  check: { backgroundColor: colors.check, borderWidth: 1, borderColor: colors.checkBorder, borderRadius: radius.sm, padding: space.md, gap: space.xs },
-  checkLabel: { fontSize: 13, fontWeight: "700", color: colors.muted, textTransform: "uppercase", letterSpacing: 0.5 },
+  waiting: { alignSelf: "flex-start" },
+  muted: { color: colors.muted },
+  check: { backgroundColor: colors.sunSoft, borderRadius: radius.sm, padding: space.md, gap: 2 },
+  checkLabel: { fontSize: 12 },
 });

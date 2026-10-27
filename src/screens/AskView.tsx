@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 import type { Answer, TutorSession } from "../tutor/session";
 import AnswerBody from "./AnswerBody";
-import { colors, radius, space } from "./theme";
+import { colors, fonts, radius, space, type } from "./theme";
+import { Icon, MwalimuAvatar } from "./ui";
+
+export const XP_PER_QUESTION = 5;
 
 type Turn = { question: string; text: string; done?: Answer };
 
@@ -12,32 +15,34 @@ export default function AskView({
   subStrand,
   subStrandNames,
   suggestedQuestions,
+  onXp,
 }: {
   session: TutorSession;
   subStrand: string;
   subStrandNames: Record<string, string>;
   suggestedQuestions: string[];
+  onXp: (xp: number) => void;
 }) {
   const [question, setQuestion] = useState("");
-  const [turn, setTurn] = useState<Turn | null>(null);
-  const [showSources, setShowSources] = useState(false);
-  const [showTimings, setShowTimings] = useState(false);
+  const [turns, setTurns] = useState<Turn[]>([]);
+  const scroll = useRef<ScrollView>(null);
 
-  const answering = turn != null && turn.done == null;
-  const fallback = turn?.done?.kind === "fallback";
-  const answeredFrom = turn?.done && turn.done.kind === "answer" && turn.done.subStrand !== subStrand ? subStrandNames[turn.done.subStrand] : null;
+  const answering = turns.length > 0 && turns[turns.length - 1].done == null;
+  const asked = new Set(turns.map((t) => t.question));
+  const suggestions = suggestedQuestions.filter((q) => !asked.has(q)).slice(0, 3);
 
   async function ask(q: string) {
     const text = q.trim();
     if (!text || answering) return;
     setQuestion("");
-    setShowSources(false);
-    setTurn({ question: text, text: "" });
+    const update = (turn: Turn) => setTurns((ts) => [...ts.slice(0, -1), turn]);
+    setTurns((ts) => [...ts, { question: text, text: "" }]);
     try {
-      const done = await session.ask(subStrand, text, (partial) => setTurn({ question: text, text: partial }));
-      setTurn({ question: text, text: done.text, done });
+      const done = await session.ask(subStrand, text, (partial) => update({ question: text, text: partial }));
+      update({ question: text, text: done.text, done });
+      if (done.kind === "answer") onXp(XP_PER_QUESTION);
     } catch (e: any) {
-      setTurn({
+      update({
         question: text,
         text: "",
         done: { kind: "fallback", text: `Something went wrong: ${e?.message ?? e}`, sources: [], relevance: 0, subStrand, timings: { relevanceMs: 0, totalMs: 0 } },
@@ -47,54 +52,53 @@ export default function AskView({
 
   return (
     <>
-      <ScrollView style={styles.flex} contentContainerStyle={styles.body} keyboardShouldPersistTaps="handled">
-        {!turn && (
-          <>
-            <Text style={styles.hint}>Ask a question about this lesson, or try one of these:</Text>
-            {suggestedQuestions.map((q) => (
-              <Pressable key={q} onPress={() => ask(q)} style={styles.suggestion}>
-                <Text style={styles.suggestionText}>{q}</Text>
-              </Pressable>
-            ))}
-          </>
-        )}
+      <View style={styles.header}>
+        <MwalimuAvatar size={44} />
+        <View style={styles.flex}>
+          <Text style={styles.name}>Mwalimu</Text>
+          <View style={styles.offlineRow}>
+            <View style={styles.dot} />
+            <Text style={styles.offline}>Works offline · on your phone</Text>
+          </View>
+        </View>
+      </View>
 
-        {turn && (
-          <>
-            <Text style={styles.question}>{turn.question}</Text>
-            {answeredFrom && <Text style={styles.answeredFrom}>From the {answeredFrom} lesson</Text>}
-            <Pressable onLongPress={() => setShowTimings((v) => !v)} style={[styles.answer, fallback && styles.answerFallback]}>
-              <AnswerBody text={turn.done?.text ?? turn.text} question={turn.question} muted={fallback} />
-              {showTimings && turn.done && (
-                <Text style={styles.timings}>
-                  relevance {turn.done.timings.relevanceMs} ms · first word {turn.done.timings.firstWordMs ?? "-"} ms · total{" "}
-                  {turn.done.timings.totalMs} ms · read {turn.done.timings.promptTokens ?? "-"} tokens
-                </Text>
-              )}
-            </Pressable>
-
-            {turn.done && turn.done.sources.length > 0 && (
-              <Pressable onPress={() => setShowSources((v) => !v)} style={styles.sourcesToggle}>
-                <Text style={styles.sourcesToggleText}>{showSources ? "Hide" : "From the lesson"}</Text>
-              </Pressable>
-            )}
-            {showSources &&
-              turn.done?.sources.map((s) => (
-                <Text key={s.title} style={styles.source}>
-                  • {s.title}
-                </Text>
-              ))}
-          </>
-        )}
+      <ScrollView
+        ref={scroll}
+        style={styles.flex}
+        contentContainerStyle={styles.chat}
+        keyboardShouldPersistTaps="handled"
+        onContentSizeChange={() => scroll.current?.scrollToEnd({ animated: true })}
+      >
+        <Text style={styles.context}>{subStrandNames[subStrand]}</Text>
+        <View style={[styles.bubble, styles.mwalimu]}>
+          <Text style={type.body}>
+            Habari! Ask me anything about {subStrandNames[subStrand].toLowerCase()}. I answer from your lesson, and I’ll tell you when I don’t know.
+          </Text>
+        </View>
+        {turns.map((turn, i) => (
+          <TurnView key={i} turn={turn} subStrand={subStrand} subStrandNames={subStrandNames} />
+        ))}
       </ScrollView>
+
+      {!answering && suggestions.length > 0 && (
+        <View style={styles.chips}>
+          {suggestions.map((q) => (
+            <Pressable key={q} onPress={() => ask(q)} style={({ pressed }) => [styles.chip, pressed && styles.chipPressed]} accessibilityRole="button">
+              <Text style={styles.chipText}>{q}</Text>
+            </Pressable>
+          ))}
+        </View>
+      )}
 
       <View style={styles.inputBar}>
         <TextInput
           style={styles.input}
           value={question}
           onChangeText={setQuestion}
-          placeholder="Type your question"
+          placeholder="Ask anything…"
           placeholderTextColor={colors.muted}
+          accessibilityLabel="Ask Mwalimu a question"
           returnKeyType="send"
           onSubmitEditing={() => ask(question)}
           editable={!answering}
@@ -103,32 +107,149 @@ export default function AskView({
         <Pressable
           onPress={() => ask(question)}
           disabled={answering || !question.trim()}
-          style={[styles.askButton, (answering || !question.trim()) && styles.askButtonDisabled]}
+          accessibilityRole="button"
+          accessibilityLabel="Send question"
+          style={[styles.send, (answering || !question.trim()) && styles.sendDisabled]}
         >
-          <Text style={styles.askText}>{answering ? "…" : "Ask"}</Text>
+          {({ pressed }) => (
+            <View style={[styles.sendFace, { marginTop: pressed ? 3 : 0, marginBottom: pressed ? 0 : 3 }]}>
+              <Icon name="send" size={24} />
+            </View>
+          )}
         </Pressable>
       </View>
     </>
   );
 }
 
+function TurnView({ turn, subStrand, subStrandNames }: { turn: Turn; subStrand: string; subStrandNames: Record<string, string> }) {
+  const [showSources, setShowSources] = useState(false);
+  const [showTimings, setShowTimings] = useState(false);
+  const done = turn.done;
+  const fallback = done?.kind === "fallback";
+  const answeredFrom = done?.kind === "answer" && done.subStrand !== subStrand ? subStrandNames[done.subStrand] : null;
+
+  return (
+    <>
+      <View style={[styles.bubble, styles.learner]}>
+        <Text style={[type.body, styles.learnerText]}>{turn.question}</Text>
+      </View>
+      {/* Long-press shows the timings, for checking speed on the phone. */}
+      <Pressable onLongPress={() => setShowTimings((v) => !v)} style={[styles.bubble, styles.mwalimu]}>
+        {answeredFrom && <Text style={type.caption}>From the {answeredFrom} lesson</Text>}
+        <AnswerBody text={done?.text ?? turn.text} question={turn.question} muted={fallback} />
+        {done?.kind === "answer" && (
+          <View style={styles.footer}>
+            <View style={styles.xp}>
+              <Icon name="star" size={16} color={colors.sun400} />
+              <Text style={styles.xpText}>+{XP_PER_QUESTION} XP for asking</Text>
+            </View>
+            {done.sources.length > 0 && (
+              <Pressable onPress={() => setShowSources((v) => !v)} hitSlop={12} accessibilityRole="button">
+                <Text style={styles.sourcesToggle}>{showSources ? "Hide" : "From the lesson"}</Text>
+              </Pressable>
+            )}
+          </View>
+        )}
+        {showSources &&
+          done?.sources.map((s) => (
+            <Text key={s.title} style={styles.source}>
+              • {s.title}
+            </Text>
+          ))}
+        {showTimings && done && (
+          <Text style={type.caption}>
+            relevance {done.timings.relevanceMs} ms · first word {done.timings.firstWordMs ?? "-"} ms · total {done.timings.totalMs} ms · read{" "}
+            {done.timings.promptTokens ?? "-"} tokens
+          </Text>
+        )}
+      </Pressable>
+    </>
+  );
+}
+
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  body: { padding: space.lg, gap: space.md },
-  hint: { fontSize: 16, color: colors.muted, lineHeight: 22 },
-  suggestion: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: radius.md, padding: space.md },
-  suggestionText: { fontSize: 16, color: colors.accent, fontWeight: "600" },
-  question: { fontSize: 17, fontWeight: "600", color: colors.text },
-  answeredFrom: { fontSize: 14, color: colors.muted, fontWeight: "600" },
-  answer: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: radius.md, padding: space.lg, gap: space.md },
-  answerFallback: { backgroundColor: colors.fallback, borderColor: colors.fallback },
-  timings: { fontSize: 12, color: colors.muted },
-  sourcesToggle: { alignSelf: "flex-start", paddingVertical: space.xs },
-  sourcesToggleText: { fontSize: 15, color: colors.accent, fontWeight: "600", textDecorationLine: "underline" },
-  source: { fontSize: 15, color: colors.muted, lineHeight: 21 },
-  inputBar: { flexDirection: "row", gap: space.sm, padding: space.md, borderTopWidth: 1, borderTopColor: colors.border, backgroundColor: colors.surface },
-  input: { flex: 1, fontSize: 17, color: colors.text, backgroundColor: colors.bg, borderRadius: radius.md, paddingHorizontal: space.md, paddingVertical: space.sm },
-  askButton: { backgroundColor: colors.accent, borderRadius: radius.md, paddingHorizontal: space.lg, justifyContent: "center", minWidth: 64, alignItems: "center" },
-  askButtonDisabled: { opacity: 0.4 },
-  askText: { color: colors.accentText, fontSize: 17, fontWeight: "700" },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: space.md,
+    paddingHorizontal: space.lg,
+    paddingVertical: space.md,
+    backgroundColor: colors.surface,
+    borderBottomWidth: 2,
+    borderBottomColor: colors.line,
+  },
+  name: { fontFamily: fonts.heading800, fontSize: 21, lineHeight: 24, color: colors.ink },
+  offlineRow: { flexDirection: "row", alignItems: "center", gap: 6 },
+  dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.green700 },
+  offline: { fontFamily: fonts.body700, fontSize: 13, color: colors.green900 },
+  chat: { padding: space.lg, gap: space.md },
+  context: {
+    alignSelf: "center",
+    fontFamily: fonts.body800,
+    fontSize: 12,
+    color: colors.muted,
+    backgroundColor: colors.pill,
+    borderRadius: radius.pill,
+    paddingHorizontal: space.md,
+    paddingVertical: 4,
+    overflow: "hidden",
+  },
+  bubble: { paddingHorizontal: space.lg, paddingVertical: space.md, gap: space.sm },
+  learner: { alignSelf: "flex-end", maxWidth: "80%", backgroundColor: colors.green700, borderRadius: 20, borderBottomRightRadius: 6 },
+  learnerText: { color: colors.surface },
+  mwalimu: {
+    alignSelf: "flex-start",
+    maxWidth: "88%",
+    backgroundColor: colors.surface,
+    borderRadius: 20,
+    borderBottomLeftRadius: 6,
+    borderBottomWidth: 2,
+    borderBottomColor: colors.line,
+  },
+  footer: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: space.md },
+  xp: { flexDirection: "row", alignItems: "center", gap: 6 },
+  xpText: { fontFamily: fonts.body800, fontSize: 13, color: colors.sunText },
+  sourcesToggle: { fontFamily: fonts.body800, fontSize: 13, color: colors.green700, textDecorationLine: "underline" },
+  source: { fontFamily: fonts.body600, fontSize: 14, lineHeight: 20, color: colors.muted },
+  chips: { flexDirection: "row", flexWrap: "wrap", gap: space.sm, paddingHorizontal: space.lg, paddingBottom: space.sm },
+  chip: {
+    minHeight: 40,
+    justifyContent: "center",
+    borderWidth: 2,
+    borderColor: colors.line,
+    borderRadius: 20,
+    backgroundColor: colors.surface,
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+  },
+  chipPressed: { borderColor: colors.green700 },
+  chipText: { fontFamily: fonts.body800, fontSize: 14, color: colors.ink },
+  inputBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    paddingHorizontal: space.lg,
+    paddingTop: space.md,
+    paddingBottom: space.lg,
+    backgroundColor: colors.surface,
+    borderTopWidth: 2,
+    borderTopColor: colors.line,
+  },
+  input: {
+    flex: 1,
+    height: 50,
+    borderWidth: 2,
+    borderColor: colors.line,
+    borderRadius: radius.md,
+    paddingHorizontal: space.lg,
+    fontFamily: fonts.body600,
+    fontSize: 16,
+    color: colors.ink,
+    backgroundColor: colors.ground,
+  },
+  send: { borderRadius: radius.md, backgroundColor: colors.sun600 },
+  sendDisabled: { opacity: 0.45 },
+  sendFace: { width: 50, height: 47, borderRadius: radius.md, backgroundColor: colors.sun400, alignItems: "center", justifyContent: "center" },
 });
