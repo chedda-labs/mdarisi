@@ -2,8 +2,9 @@ import { completion, loadModel, resume, suspend, VERBOSITY } from "@qvac/sdk";
 
 import { subStrandContext } from "./context";
 import type { ModelRole } from "./model";
+import models from "./models.json";
 import { buildPrompt, FALLBACK } from "./prompt";
-import { buildIndex, EMBED_CONFIG, embedQuestion, rank, RELEVANCE_THRESHOLD, ROUTE_MARGIN, type RelevanceIndex } from "./relevance";
+import { buildIndex, EMBED_CONFIG, embedQuestion, rank, RELEVANCE_THRESHOLD, ROUTE_MARGIN, storedIndex, type RelevanceIndex } from "./relevance";
 
 type Pack = Parameters<typeof subStrandContext>[0];
 
@@ -53,31 +54,50 @@ export class TutorSession {
   // One completion at a time: Ask and Quiz share the model, so a call made
   // while another is running waits for it instead of failing.
   private queue: Promise<unknown> = Promise.resolve();
+  // Resolves with the embedding model's load time once it can gate questions.
+  // Set by prepare().
+  embedding!: Promise<number>;
 
   constructor(
     private pack: Pack,
     private resolveModelPath: ResolveModelPath,
   ) {}
 
-  // Copies models out of the APK on first launch, loads them, then reads each
-  // sub-strand's lesson text once. The read is cached on disk by kvCache, so
-  // later launches skip most of it.
-  async prepare(subStrands: string[], onStep: (s: PrepareStep) => void) {
+  // Copies models out of the APK on first launch, loads the tutor model, then
+  // reads each sub-strand's lesson text. The read is cached on disk by kvCache,
+  // so later launches skip most of it. The embedding model is only needed to
+  // gate Ask questions, and loading it took 13-16 s of a 20 s launch on the demo
+  // phone, so it starts loading once the rest is done (see `embedding`). It
+  // can't overlap: QVAC ran the two loads one after the other anyway.
+  // Returns how long each step took, in ms.
+  async prepare(subStrands: string[], onStep: (s: PrepareStep) => void): Promise<Record<string, number>> {
+    const timings: Record<string, number> = {};
+    let t = Date.now();
+    const lap = (name: string) => {
+      timings[name] = Date.now() - t;
+      t = Date.now();
+    };
+
     const tutorPath = await this.resolveModelPath("tutor", (percentage) =>
       onStep({ step: "copy", model: "tutor", percentage }),
     );
     const embedPath = await this.resolveModelPath("embed", (percentage) =>
       onStep({ step: "copy", model: "embed", percentage }),
     );
+    lap("copy");
 
     onStep({ step: "load" });
-    this.embedId = await loadModel({ modelSrc: embedPath, modelType: "llamacpp-embedding", modelConfig: EMBED_CONFIG });
     this.llmId = await loadModel({ modelSrc: tutorPath, modelType: "llamacpp-completion", modelConfig: LLM_CONFIG });
+    lap("loadTutor");
 
+    // Sub-strands without stored vectors are embedded once the embedding model loads.
+    const unindexed: string[] = [];
     for (const subStrand of subStrands) {
       onStep({ step: "read", subStrand });
       const context = subStrandContext(this.pack, subStrand);
-      this.indexes.set(subStrand, await buildIndex(this.embedId, context));
+      const stored = storedIndex(context, this.pack.manifest?.embedModel, models.embed.sha256);
+      if (stored) this.indexes.set(subStrand, stored);
+      else unindexed.push(subStrand);
       await completion({
         modelId: this.llmId,
         history: buildPrompt(PRIME_QUESTION, context),
@@ -85,7 +105,20 @@ export class TutorSession {
         kvCache: subStrand,
         generationParams: { ...GENERATION, predict: 4 },
       }).final;
+      lap(`prime:${subStrand}`);
     }
+
+    const embedStart = Date.now();
+    this.embedding = (async () => {
+      this.embedId = await loadModel({ modelSrc: embedPath, modelType: "llamacpp-embedding", modelConfig: EMBED_CONFIG });
+      for (const subStrand of unindexed) {
+        this.indexes.set(subStrand, await buildIndex(this.embedId, subStrandContext(this.pack, subStrand)));
+      }
+      return Date.now() - embedStart;
+    })();
+    // A failed load surfaces on the first question instead.
+    this.embedding.catch(() => {});
+    return timings;
   }
 
   // Answers from the open sub-strand unless another matches the question
@@ -94,6 +127,7 @@ export class TutorSession {
   // it, and the model then makes an answer up.
   ask(openSubStrand: string, question: string, onText: (text: string) => void): Promise<Answer> {
     return this.exclusive(async () => {
+      await this.embedding;
       const t0 = Date.now();
       const embedding = await embedQuestion(this.embedId, question);
       let subStrand = openSubStrand;
