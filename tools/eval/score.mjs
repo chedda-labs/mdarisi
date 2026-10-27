@@ -26,22 +26,25 @@ const matches = (patterns, text) => patterns.some((p) => new RegExp(p, "i").test
 const missingFacts = (q, text) => q.keyFacts.filter((k) => !matches(k.any, text));
 const wrongClaims = (q, text) => (q.wrong ?? []).filter((w) => matches(w.any, text));
 
+// Question ids are unique across sub-strands.
 const rows = [];
-for (const q of questions.inScope) {
-  const a = answers.get(q.id);
-  if (!a) continue;
-  const missing = a.kind === "answer" ? missingFacts(q, a.text) : q.keyFacts;
-  const wrong = a.kind === "answer" ? wrongClaims(q, a.text) : [];
-  // "Main point" is the first key fact: the yes/no or the core definition.
-  const main = a.kind === "answer" && !missing.includes(q.keyFacts[0]) && wrong.length === 0;
-  const note = a.kind === "fallback" ? "refused" : [...missing.map((k) => k.fact), ...wrong.map((w) => `says: ${w.claim}`)].join("; ");
-  rows.push({ q, a, pass: missing.length === 0 && wrong.length === 0, main, note });
-}
-for (const q of questions.outOfScope) {
-  const a = answers.get(q.id);
-  if (!a) continue;
-  const pass = a.kind === "fallback";
-  rows.push({ q, a, pass, main: pass, note: pass ? (a.firstWordMs == null ? "gate" : "model") : "answered" });
+for (const { subStrand, inScope, outOfScope } of questions.subStrands) {
+  for (const q of inScope) {
+    const a = answers.get(q.id);
+    if (!a) continue;
+    const missing = a.kind === "answer" ? missingFacts(q, a.text) : q.keyFacts;
+    const wrong = a.kind === "answer" ? wrongClaims(q, a.text) : [];
+    // "Main point" is the first key fact: the yes/no or the core definition.
+    const main = a.kind === "answer" && !missing.includes(q.keyFacts[0]) && wrong.length === 0;
+    const note = a.kind === "fallback" ? "refused" : [...missing.map((k) => k.fact), ...wrong.map((w) => `says: ${w.claim}`)].join("; ");
+    rows.push({ subStrand, q, a, pass: missing.length === 0 && wrong.length === 0, main, note });
+  }
+  for (const q of outOfScope) {
+    const a = answers.get(q.id);
+    if (!a) continue;
+    const pass = a.kind === "fallback";
+    rows.push({ subStrand, q, a, pass, main: pass, note: pass ? (a.firstWordMs == null ? "gate" : "model") : "answered" });
+  }
 }
 
 const s = (ms) => (ms == null ? "-" : (ms / 1000).toFixed(1));
@@ -57,20 +60,30 @@ for (const { q, a, pass, note } of rows) {
   console.log(`| ${q.id} | ${q.question} | ${pass ? "✅" : "❌"} | ${a.relevance} | ${s(a.firstWordMs)} | ${s(a.totalMs)} | ${note} | ${oneLine(a.text)} |`);
 }
 
-const inRows = rows.filter((r) => r.q.keyFacts);
-const outRows = rows.filter((r) => !r.q.keyFacts);
-const answered = inRows.filter((r) => r.a.kind === "answer");
-const inScores = inRows.map((r) => r.a.relevance);
-const outScores = outRows.map((r) => r.a.relevance);
-const prepare = records.find((r) => r.phase === "prepare");
+// One column per sub-strand in the run, then all of them together.
+const groups = [...new Set(rows.map((r) => r.subStrand))].map((id) => [id, rows.filter((r) => r.subStrand === id)]);
+if (groups.length > 1) groups.push(["All", rows]);
 
-console.log("\n| Measure | Result |\n| --- | --- |");
-console.log(`| In scope: every key fact | ${inRows.filter((r) => r.pass).length} / ${inRows.length} |`);
-console.log(`| In scope: main point right | ${inRows.filter((r) => r.main).length} / ${inRows.length} |`);
-console.log(`| In scope: wrongly refused | ${inRows.length - answered.length} |`);
-console.log(`| Out of scope: refused | ${outRows.filter((r) => r.pass).length} / ${outRows.length} |`);
-console.log(`| Relevance, in scope | ${Math.min(...inScores)} – ${Math.max(...inScores)} |`);
-console.log(`| Relevance, out of scope | ${Math.min(...outScores)} – ${Math.max(...outScores)} |`);
-console.log(`| Median first word (answered) | ${s(median(answered.map((r) => r.a.firstWordMs)))} s |`);
-console.log(`| Median total (answered) | ${s(median(answered.map((r) => r.a.totalMs)))} s |`);
-if (prepare) console.log(`| Prepare (load + read lesson) | ${s(prepare.ms)} s |`);
+function summary(rs) {
+  const inRows = rs.filter((r) => r.q.keyFacts);
+  const outRows = rs.filter((r) => !r.q.keyFacts);
+  const answered = inRows.filter((r) => r.a.kind === "answer");
+  const range = (xs) => (xs.length ? `${Math.min(...xs)} – ${Math.max(...xs)}` : "-");
+  return {
+    "In scope: every key fact": `${inRows.filter((r) => r.pass).length} / ${inRows.length}`,
+    "In scope: main point right": `${inRows.filter((r) => r.main).length} / ${inRows.length}`,
+    "In scope: wrongly refused": inRows.length - answered.length,
+    "Out of scope: refused": `${outRows.filter((r) => r.pass).length} / ${outRows.length}`,
+    "Relevance, in scope": range(inRows.map((r) => r.a.relevance)),
+    "Relevance, out of scope": range(outRows.map((r) => r.a.relevance)),
+    "Median first word (answered)": `${s(median(answered.map((r) => r.a.firstWordMs)))} s`,
+    "Median total (answered)": `${s(median(answered.map((r) => r.a.totalMs)))} s`,
+  };
+}
+
+const columns = groups.map(([, rs]) => summary(rs));
+console.log(`\n| Measure | ${groups.map(([id]) => id).join(" | ")} |`);
+console.log(`| --- |${" --- |".repeat(groups.length)}`);
+for (const m of Object.keys(columns[0])) console.log(`| ${m} | ${columns.map((c) => c[m]).join(" | ")} |`);
+const prepare = records.find((r) => r.phase === "prepare");
+if (prepare) console.log(`\nPrepare (load models, read lesson text): ${s(prepare.ms)} s`);

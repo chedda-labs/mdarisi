@@ -1,566 +1,893 @@
 {
-  "about": "Test set for the g7.sci.mix sub-strand. An in-scope question passes when the tutor answers (no fallback), every key fact matches at least one of its patterns, and no 'wrong' pattern matches: wrong patterns catch known false statements that would otherwise pass on keywords alone. Patterns are case-insensitive regexes. An out-of-scope question passes when the tutor gives the fallback. 'near' marks out-of-scope questions from the same strand that the lesson text does not cover.",
-  "subStrand": "g7.sci.mix",
-  "inScope": [
+  "about": "Test set, grouped by sub-strand; each sub-strand's tutor answers only from its own lesson text. An in-scope question passes when the tutor answers (no fallback), every key fact matches at least one of its patterns, and no 'wrong' pattern matches: wrong patterns catch known false statements that would otherwise pass on keywords alone. Patterns are case-insensitive regexes. An out-of-scope question passes when the tutor gives the fallback. 'near' marks out-of-scope questions from the same strand that this sub-strand's lesson text does not cover.",
+  "subStrands": [
     {
-      "id": "q1",
-      "question": "Is salt water a mixture? Why?",
-      "keyFacts": [
+      "subStrand": "g7.sci.mix",
+      "inScope": [
         {
-          "fact": "yes",
-          "any": [
-            "^\\W*yes\\b"
+          "id": "q1",
+          "question": "Is salt water a mixture? Why?",
+          "keyFacts": [
+            {
+              "fact": "yes",
+              "any": [
+                "^\\W*yes\\b"
+              ]
+            },
+            {
+              "fact": "reason: not chemically joined, salt can be got back, or two substances",
+              "any": [
+                "not\\W+(chemically\\W+)?joined",
+                "not chemically",
+                "evaporat",
+                "got back",
+                "separated",
+                "two (or more )?substances"
+              ]
+            }
+          ],
+          "wrong": [
+            {
+              "claim": "filtering separates salt water",
+              "any": [
+                "filter"
+              ]
+            }
           ]
         },
         {
-          "fact": "reason: not chemically joined, salt can be got back, or two substances",
-          "any": [
-            "not\\W+(chemically\\W+)?joined",
-            "not chemically",
-            "evaporat",
-            "got back",
-            "separated",
-            "two (or more )?substances"
+          "id": "q2",
+          "question": "How can I separate sand from water?",
+          "keyFacts": [
+            {
+              "fact": "filtering or decanting",
+              "any": [
+                "filter",
+                "decant",
+                "pour(ing)? off"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "q3",
+          "question": "What is a solute?",
+          "keyFacts": [
+            {
+              "fact": "the substance that dissolves",
+              "any": [
+                "dissolve"
+              ]
+            },
+            {
+              "fact": "example such as salt or sugar",
+              "any": [
+                "salt",
+                "sugar"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "q4",
+          "question": "Does sugar disappear when it dissolves in tea?",
+          "keyFacts": [
+            {
+              "fact": "no",
+              "any": [
+                "^\\W*no\\b"
+              ]
+            },
+            {
+              "fact": "evidence: sweet taste, same mass, left behind on evaporation, or tiny particles",
+              "any": [
+                "sweet",
+                "mass",
+                "weigh",
+                "evaporat",
+                "left behind",
+                "particles"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "q5",
+          "question": "Is githeri a uniform mixture?",
+          "keyFacts": [
+            {
+              "fact": "no, it is non-uniform",
+              "any": [
+                "^\\W*no\\b",
+                "non-uniform",
+                "not (a )?uniform"
+              ]
+            },
+            {
+              "fact": "you can see the maize and beans",
+              "any": [
+                "see",
+                "maize"
+              ]
+            }
+          ],
+          "wrong": [
+            {
+              "claim": "githeri is uniform",
+              "any": [
+                "githeri is a uniform",
+                "^\\W*yes\\b"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "q6",
+          "question": "What is a solvent?",
+          "keyFacts": [
+            {
+              "fact": "the liquid a solute dissolves in",
+              "any": [
+                "liquid",
+                "dissolves? in",
+                "dissolves the solute"
+              ]
+            },
+            {
+              "fact": "example such as water",
+              "any": [
+                "water"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "q7",
+          "question": "How do you get salt back from sea water?",
+          "keyFacts": [
+            {
+              "fact": "evaporation or heating",
+              "any": [
+                "evaporat",
+                "heat",
+                "boil"
+              ]
+            }
+          ],
+          "wrong": [
+            {
+              "claim": "the salt evaporates",
+              "any": [
+                "salt evaporates"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "q8",
+          "question": "Is air a mixture?",
+          "keyFacts": [
+            {
+              "fact": "yes",
+              "any": [
+                "^\\W*yes\\b"
+              ]
+            },
+            {
+              "fact": "gases such as nitrogen and oxygen",
+              "any": [
+                "nitrogen",
+                "oxygen",
+                "gases"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "q9",
+          "question": "Why does muddy water become clear when it is left to stand?",
+          "keyFacts": [
+            {
+              "fact": "the soil settles at the bottom",
+              "any": [
+                "settle",
+                "sink",
+                "bottom"
+              ]
+            },
+            {
+              "fact": "it is a non-uniform mixture",
+              "any": [
+                "non-uniform",
+                "not uniform"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "q10",
+          "question": "What is a pure substance?",
+          "keyFacts": [
+            {
+              "fact": "made of only one kind of matter",
+              "any": [
+                "one kind",
+                "only one",
+                "single"
+              ]
+            },
+            {
+              "fact": "example such as pure water, gold, oxygen or salt",
+              "any": [
+                "pure water",
+                "gold",
+                "oxygen",
+                "salt"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "q11",
+          "question": "Is gold a mixture?",
+          "keyFacts": [
+            {
+              "fact": "no",
+              "any": [
+                "^\\W*no\\b"
+              ]
+            },
+            {
+              "fact": "it is a pure substance",
+              "any": [
+                "pure"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "q12",
+          "question": "How can I separate iron filings from sand?",
+          "keyFacts": [
+            {
+              "fact": "use a magnet",
+              "any": [
+                "magnet"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "q13",
+          "question": "How do I separate stones from sand?",
+          "keyFacts": [
+            {
+              "fact": "sieving",
+              "any": [
+                "siev"
+              ]
+            }
+          ],
+          "wrong": [
+            {
+              "claim": "sand stays on the sieve",
+              "any": [
+                "sand stays on the sieve"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "q14",
+          "question": "What is a solution?",
+          "keyFacts": [
+            {
+              "fact": "a solid dissolved in a liquid",
+              "any": [
+                "dissolve"
+              ]
+            },
+            {
+              "fact": "it is a uniform mixture",
+              "any": [
+                "uniform",
+                "mixture"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "q15",
+          "question": "Is soil a mixture?",
+          "keyFacts": [
+            {
+              "fact": "yes",
+              "any": [
+                "^\\W*yes\\b"
+              ]
+            },
+            {
+              "fact": "its parts, such as sand, clay, humus or stones",
+              "any": [
+                "sand",
+                "clay",
+                "humus",
+                "stones"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "q16",
+          "question": "What is the difference between a uniform and a non-uniform mixture?",
+          "keyFacts": [
+            {
+              "fact": "uniform looks the same all the way through",
+              "any": [
+                "same all the way",
+                "same throughout",
+                "looks? the same",
+                "cannot see",
+                "can't see",
+                "evenly",
+                "throughout"
+              ]
+            },
+            {
+              "fact": "non-uniform: you can see the parts, or they separate",
+              "any": [
+                "can see",
+                "not the same",
+                "separate",
+                "settle",
+                "not evenly",
+                "unevenly"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "q17",
+          "question": "Is a mixture made of things that do not mix?",
+          "keyFacts": [
+            {
+              "fact": "no",
+              "any": [
+                "^\\W*no\\b"
+              ]
+            },
+            {
+              "fact": "they are mixed but not chemically joined",
+              "any": [
+                "not\\W+(chemically\\W+)?joined",
+                "not chemically",
+                "mixed"
+              ]
+            }
+          ],
+          "wrong": [
+            {
+              "claim": "a mixture is things that do not mix",
+              "any": [
+                "made of things that do not mix",
+                "(don.t|do not|doesn.t) mix completely"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "q18",
+          "question": "Why can a mixture be separated?",
+          "keyFacts": [
+            {
+              "fact": "the substances are not chemically joined",
+              "any": [
+                "not\\W+(chemically\\W+)?joined",
+                "not chemically",
+                "keeps? (its|their) own"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "q19",
+          "question": "How can Amina get clean salt from salty sand?",
+          "keyFacts": [
+            {
+              "fact": "add water to dissolve the salt",
+              "any": [
+                "dissolve",
+                "add water"
+              ]
+            },
+            {
+              "fact": "filter out the sand",
+              "any": [
+                "filter"
+              ]
+            },
+            {
+              "fact": "evaporate the water",
+              "any": [
+                "evaporat",
+                "heat"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "q20",
+          "question": "What is decanting?",
+          "keyFacts": [
+            {
+              "fact": "pouring off a liquid gently",
+              "any": [
+                "pour"
+              ]
+            },
+            {
+              "fact": "leaving the settled solid behind",
+              "any": [
+                "settled",
+                "bottom",
+                "solid"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "q21",
+          "question": "If I put three spoons of sugar in my tea instead of one, is it still a mixture?",
+          "keyFacts": [
+            {
+              "fact": "yes",
+              "any": [
+                "^\\W*yes\\b"
+              ]
+            },
+            {
+              "fact": "the amounts in a mixture can change",
+              "any": [
+                "amount",
+                "spoon",
+                "can change",
+                "not\\W+(chemically\\W+)?joined"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "q22",
+          "question": "Is salt water a uniform or a non-uniform mixture?",
+          "keyFacts": [
+            {
+              "fact": "uniform",
+              "any": [
+                "(^|[^-\\w])uniform"
+              ]
+            },
+            {
+              "fact": "it looks and tastes the same throughout",
+              "any": [
+                "same",
+                "cannot see",
+                "can't see",
+                "taste"
+              ]
+            }
+          ],
+          "wrong": [
+            {
+              "claim": "filtering separates salt water",
+              "any": [
+                "filter"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "q23",
+          "question": "Does the salt in salt water stay salty?",
+          "keyFacts": [
+            {
+              "fact": "yes",
+              "any": [
+                "^\\W*yes\\b"
+              ]
+            },
+            {
+              "fact": "each substance keeps its own properties",
+              "any": [
+                "own properties",
+                "keeps",
+                "still salty"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "q24",
+          "question": "What does filtering separate?",
+          "keyFacts": [
+            {
+              "fact": "a solid that does not dissolve",
+              "any": [
+                "solid",
+                "soil",
+                "sand",
+                "not dissolve",
+                "insoluble"
+              ]
+            },
+            {
+              "fact": "from a liquid",
+              "any": [
+                "liquid",
+                "water"
+              ]
+            }
           ]
         }
       ],
-      "wrong": [
+      "outOfScope": [
         {
-          "claim": "filtering separates salt water",
-          "any": [
-            "filter"
-          ]
+          "id": "x1",
+          "question": "How do I solve 2x + 3 = 7?"
+        },
+        {
+          "id": "x2",
+          "question": "What is the capital of France?"
+        },
+        {
+          "id": "x3",
+          "question": "What is photosynthesis?"
+        },
+        {
+          "id": "x4",
+          "question": "How do I cook ugali?"
+        },
+        {
+          "id": "x5",
+          "question": "Who wrote the Kenyan national anthem?"
+        },
+        {
+          "id": "x6",
+          "question": "What causes rain?"
+        },
+        {
+          "id": "x7",
+          "question": "What is a compound?",
+          "near": true
+        },
+        {
+          "id": "x8",
+          "question": "What is an element?",
+          "near": true
         }
       ]
     },
     {
-      "id": "q2",
-      "question": "How can I separate sand from water?",
-      "keyFacts": [
+      "subStrand": "g7.sci.elc",
+      "inScope": [
         {
-          "fact": "filtering or decanting",
-          "any": [
-            "filter",
-            "decant",
-            "pour(ing)? off"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "q3",
-      "question": "What is a solute?",
-      "keyFacts": [
-        {
-          "fact": "the substance that dissolves",
-          "any": [
-            "dissolve"
+          "id": "e1",
+          "question": "What is an element?",
+          "keyFacts": [
+            {
+              "fact": "cannot be broken down; one kind of atom",
+              "any": [
+                "broken down",
+                "one kind of atom",
+                "simpler"
+              ]
+            },
+            {
+              "fact": "example such as oxygen, carbon or iron",
+              "any": [
+                "oxygen",
+                "carbon",
+                "iron",
+                "copper",
+                "gold",
+                "aluminium",
+                "hydrogen"
+              ]
+            }
           ]
         },
         {
-          "fact": "example such as salt or sugar",
-          "any": [
-            "salt",
-            "sugar"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "q4",
-      "question": "Does sugar disappear when it dissolves in tea?",
-      "keyFacts": [
-        {
-          "fact": "no",
-          "any": [
-            "^\\W*no\\b"
-          ]
-        },
-        {
-          "fact": "evidence: sweet taste, same mass, left behind on evaporation, or tiny particles",
-          "any": [
-            "sweet",
-            "mass",
-            "weigh",
-            "evaporat",
-            "left behind",
-            "particles"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "q5",
-      "question": "Is githeri a uniform mixture?",
-      "keyFacts": [
-        {
-          "fact": "no, it is non-uniform",
-          "any": [
-            "^\\W*no\\b",
-            "non-uniform",
-            "not (a )?uniform"
+          "id": "e2",
+          "question": "Is water an element or a compound?",
+          "keyFacts": [
+            {
+              "fact": "a compound",
+              "any": [
+                "(^|[^\\w])compound"
+              ]
+            },
+            {
+              "fact": "of hydrogen and oxygen",
+              "any": [
+                "hydrogen"
+              ]
+            }
+          ],
+          "wrong": [
+            {
+              "claim": "water is an element",
+              "any": [
+                "water is an element"
+              ]
+            }
           ]
         },
         {
-          "fact": "you can see the maize and beans",
-          "any": [
-            "see",
-            "maize"
+          "id": "e3",
+          "question": "What is a compound?",
+          "keyFacts": [
+            {
+              "fact": "two or more elements joined chemically",
+              "any": [
+                "join",
+                "combine"
+              ]
+            },
+            {
+              "fact": "example such as water, carbon dioxide or salt",
+              "any": [
+                "water",
+                "carbon dioxide",
+                "salt",
+                "sodium chloride"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "e4",
+          "question": "What is the chemical symbol for copper?",
+          "keyFacts": [
+            {
+              "fact": "Cu",
+              "any": [
+                "\\bcu\\b"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "e5",
+          "question": "Why is the symbol for sodium Na?",
+          "keyFacts": [
+            {
+              "fact": "from its Latin name, natrium",
+              "any": [
+                "latin",
+                "natrium"
+              ]
+            }
+          ],
+          "wrong": [
+            {
+              "claim": "the Latin name is ferrum",
+              "any": [
+                "ferrum"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "e6",
+          "question": "How are metals different from non-metals?",
+          "keyFacts": [
+            {
+              "fact": "metals are shiny or conduct",
+              "any": [
+                "shiny",
+                "conduct"
+              ]
+            },
+            {
+              "fact": "non-metals are dull, brittle, gases or poor conductors",
+              "any": [
+                "dull",
+                "break",
+                "gas",
+                "do not conduct",
+                "don't conduct",
+                "poor"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "e7",
+          "question": "Why are sufurias made of aluminium?",
+          "keyFacts": [
+            {
+              "fact": "aluminium conducts heat",
+              "any": [
+                "conduct"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "e8",
+          "question": "Is air a compound?",
+          "keyFacts": [
+            {
+              "fact": "no",
+              "any": [
+                "^\\W*no\\b"
+              ]
+            },
+            {
+              "fact": "it is a mixture",
+              "any": [
+                "mixture"
+              ]
+            }
+          ],
+          "wrong": [
+            {
+              "claim": "air is a compound",
+              "any": [
+                "air is a compound"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "e9",
+          "question": "What is the difference between a mixture and a compound?",
+          "keyFacts": [
+            {
+              "fact": "in a mixture the substances are not joined",
+              "any": [
+                "not\\W+(chemically\\W+)?joined",
+                "not chemically",
+                "own form",
+                "own properties",
+                "keeps? its own",
+                "remain separate",
+                "stay separate"
+              ]
+            },
+            {
+              "fact": "in a compound the elements are joined chemically",
+              "any": [
+                "(?<!not )chemically joined",
+                "(?<!not )joined chemically",
+                "(?<!not )join chemically"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "e10",
+          "question": "What happens when iron and sulphur are heated together?",
+          "keyFacts": [
+            {
+              "fact": "they make iron sulphide, a compound",
+              "any": [
+                "iron sulphide",
+                "iron sulfide",
+                "compound"
+              ]
+            },
+            {
+              "fact": "new properties, or the magnet no longer pulls out iron",
+              "any": [
+                "magnet",
+                "new properties",
+                "black",
+                "joined"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "e11",
+          "question": "Can salt be split into sodium and chlorine by filtering?",
+          "keyFacts": [
+            {
+              "fact": "no",
+              "any": [
+                "^\\W*no\\b"
+              ]
+            },
+            {
+              "fact": "only by a chemical change",
+              "any": [
+                "chemical"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "e12",
+          "question": "Is graphite a metal?",
+          "keyFacts": [
+            {
+              "fact": "no",
+              "any": [
+                "^\\W*no\\b"
+              ]
+            },
+            {
+              "fact": "it is carbon, a non-metal",
+              "any": [
+                "non-metal",
+                "carbon"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "e13",
+          "question": "How many hydrogen atoms are in one water molecule?",
+          "keyFacts": [
+            {
+              "fact": "two",
+              "any": [
+                "\\b(two|2)\\b"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "e14",
+          "question": "Does a compound have the same properties as the elements it is made of?",
+          "keyFacts": [
+            {
+              "fact": "no",
+              "any": [
+                "^\\W*no\\b"
+              ]
+            },
+            {
+              "fact": "it has new, different properties",
+              "any": [
+                "new",
+                "different"
+              ]
+            }
+          ],
+          "wrong": [
+            {
+              "claim": "same properties",
+              "any": [
+                "^\\W*yes\\b"
+              ]
+            }
           ]
         }
       ],
-      "wrong": [
+      "outOfScope": [
         {
-          "claim": "githeri is uniform",
-          "any": [
-            "githeri is a uniform",
-            "^\\W*yes\\b"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "q6",
-      "question": "What is a solvent?",
-      "keyFacts": [
-        {
-          "fact": "the liquid a solute dissolves in",
-          "any": [
-            "liquid",
-            "dissolves? in",
-            "dissolves the solute"
-          ]
+          "id": "ex1",
+          "question": "What is photosynthesis?"
         },
         {
-          "fact": "example such as water",
-          "any": [
-            "water"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "q7",
-      "question": "How do you get salt back from sea water?",
-      "keyFacts": [
-        {
-          "fact": "evaporation or heating",
-          "any": [
-            "evaporat",
-            "heat",
-            "boil"
-          ]
-        }
-      ],
-      "wrong": [
-        {
-          "claim": "the salt evaporates",
-          "any": [
-            "salt evaporates"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "q8",
-      "question": "Is air a mixture?",
-      "keyFacts": [
-        {
-          "fact": "yes",
-          "any": [
-            "^\\W*yes\\b"
-          ]
+          "id": "ex2",
+          "question": "How do I solve 3x = 12?"
         },
         {
-          "fact": "gases such as nitrogen and oxygen",
-          "any": [
-            "nitrogen",
-            "oxygen",
-            "gases"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "q9",
-      "question": "Why does muddy water become clear when it is left to stand?",
-      "keyFacts": [
-        {
-          "fact": "the soil settles at the bottom",
-          "any": [
-            "settle",
-            "sink",
-            "bottom"
-          ]
+          "id": "ex3",
+          "question": "Who is the president of Kenya?"
         },
         {
-          "fact": "it is a non-uniform mixture",
-          "any": [
-            "non-uniform",
-            "not uniform"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "q10",
-      "question": "What is a pure substance?",
-      "keyFacts": [
-        {
-          "fact": "made of only one kind of matter",
-          "any": [
-            "one kind",
-            "only one",
-            "single"
-          ]
+          "id": "ex4",
+          "question": "What is a solute?",
+          "near": true
         },
         {
-          "fact": "example such as pure water, gold, oxygen or salt",
-          "any": [
-            "pure water",
-            "gold",
-            "oxygen",
-            "salt"
-          ]
+          "id": "ex5",
+          "question": "How can I separate sand from water?",
+          "near": true
         }
       ]
-    },
-    {
-      "id": "q11",
-      "question": "Is gold a mixture?",
-      "keyFacts": [
-        {
-          "fact": "no",
-          "any": [
-            "^\\W*no\\b"
-          ]
-        },
-        {
-          "fact": "it is a pure substance",
-          "any": [
-            "pure"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "q12",
-      "question": "How can I separate iron filings from sand?",
-      "keyFacts": [
-        {
-          "fact": "use a magnet",
-          "any": [
-            "magnet"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "q13",
-      "question": "How do I separate stones from sand?",
-      "keyFacts": [
-        {
-          "fact": "sieving",
-          "any": [
-            "siev"
-          ]
-        }
-      ],
-      "wrong": [
-        {
-          "claim": "sand stays on the sieve",
-          "any": [
-            "sand stays on the sieve"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "q14",
-      "question": "What is a solution?",
-      "keyFacts": [
-        {
-          "fact": "a solid dissolved in a liquid",
-          "any": [
-            "dissolve"
-          ]
-        },
-        {
-          "fact": "it is a uniform mixture",
-          "any": [
-            "uniform",
-            "mixture"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "q15",
-      "question": "Is soil a mixture?",
-      "keyFacts": [
-        {
-          "fact": "yes",
-          "any": [
-            "^\\W*yes\\b"
-          ]
-        },
-        {
-          "fact": "its parts, such as sand, clay, humus or stones",
-          "any": [
-            "sand",
-            "clay",
-            "humus",
-            "stones"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "q16",
-      "question": "What is the difference between a uniform and a non-uniform mixture?",
-      "keyFacts": [
-        {
-          "fact": "uniform looks the same all the way through",
-          "any": [
-            "same all the way",
-            "same throughout",
-            "looks? the same",
-            "cannot see",
-            "can't see",
-            "evenly",
-            "throughout"
-          ]
-        },
-        {
-          "fact": "non-uniform: you can see the parts, or they separate",
-          "any": [
-            "can see",
-            "not the same",
-            "separate",
-            "settle",
-            "not evenly",
-            "unevenly"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "q17",
-      "question": "Is a mixture made of things that do not mix?",
-      "keyFacts": [
-        {
-          "fact": "no",
-          "any": [
-            "^\\W*no\\b"
-          ]
-        },
-        {
-          "fact": "they are mixed but not chemically joined",
-          "any": [
-            "not\\W+(chemically\\W+)?joined",
-            "not chemically",
-            "mixed"
-          ]
-        }
-      ],
-      "wrong": [
-        {
-          "claim": "a mixture is things that do not mix",
-          "any": [
-            "made of things that do not mix",
-            "(don.t|do not|doesn.t) mix completely"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "q18",
-      "question": "Why can a mixture be separated?",
-      "keyFacts": [
-        {
-          "fact": "the substances are not chemically joined",
-          "any": [
-            "not\\W+(chemically\\W+)?joined",
-            "not chemically",
-            "keeps? (its|their) own"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "q19",
-      "question": "How can Amina get clean salt from salty sand?",
-      "keyFacts": [
-        {
-          "fact": "add water to dissolve the salt",
-          "any": [
-            "dissolve",
-            "add water"
-          ]
-        },
-        {
-          "fact": "filter out the sand",
-          "any": [
-            "filter"
-          ]
-        },
-        {
-          "fact": "evaporate the water",
-          "any": [
-            "evaporat",
-            "heat"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "q20",
-      "question": "What is decanting?",
-      "keyFacts": [
-        {
-          "fact": "pouring off a liquid gently",
-          "any": [
-            "pour"
-          ]
-        },
-        {
-          "fact": "leaving the settled solid behind",
-          "any": [
-            "settled",
-            "bottom",
-            "solid"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "q21",
-      "question": "If I put three spoons of sugar in my tea instead of one, is it still a mixture?",
-      "keyFacts": [
-        {
-          "fact": "yes",
-          "any": [
-            "^\\W*yes\\b"
-          ]
-        },
-        {
-          "fact": "the amounts in a mixture can change",
-          "any": [
-            "amount",
-            "spoon",
-            "can change",
-            "not\\W+(chemically\\W+)?joined"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "q22",
-      "question": "Is salt water a uniform or a non-uniform mixture?",
-      "keyFacts": [
-        {
-          "fact": "uniform",
-          "any": [
-            "(^|[^-\\w])uniform"
-          ]
-        },
-        {
-          "fact": "it looks and tastes the same throughout",
-          "any": [
-            "same",
-            "cannot see",
-            "can't see",
-            "taste"
-          ]
-        }
-      ],
-      "wrong": [
-        {
-          "claim": "filtering separates salt water",
-          "any": [
-            "filter"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "q23",
-      "question": "Does the salt in salt water stay salty?",
-      "keyFacts": [
-        {
-          "fact": "yes",
-          "any": [
-            "^\\W*yes\\b"
-          ]
-        },
-        {
-          "fact": "each substance keeps its own properties",
-          "any": [
-            "own properties",
-            "keeps",
-            "still salty"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "q24",
-      "question": "What does filtering separate?",
-      "keyFacts": [
-        {
-          "fact": "a solid that does not dissolve",
-          "any": [
-            "solid",
-            "soil",
-            "sand",
-            "not dissolve",
-            "insoluble"
-          ]
-        },
-        {
-          "fact": "from a liquid",
-          "any": [
-            "liquid",
-            "water"
-          ]
-        }
-      ]
-    }
-  ],
-  "outOfScope": [
-    {
-      "id": "x1",
-      "question": "How do I solve 2x + 3 = 7?"
-    },
-    {
-      "id": "x2",
-      "question": "What is the capital of France?"
-    },
-    {
-      "id": "x3",
-      "question": "What is photosynthesis?"
-    },
-    {
-      "id": "x4",
-      "question": "How do I cook ugali?"
-    },
-    {
-      "id": "x5",
-      "question": "Who wrote the Kenyan national anthem?"
-    },
-    {
-      "id": "x6",
-      "question": "What causes rain?"
-    },
-    {
-      "id": "x7",
-      "question": "What is a compound?",
-      "near": true
-    },
-    {
-      "id": "x8",
-      "question": "What is an element?",
-      "near": true
     }
   ]
 }
