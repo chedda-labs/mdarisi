@@ -51,3 +51,6 @@ yarn-error.*
 
 # models not bundled in the APK (tools/fetch-model.sh)
 /.models/
+
+# laptop eval runner bundle (npm run eval)
+/tools/eval/.build/
