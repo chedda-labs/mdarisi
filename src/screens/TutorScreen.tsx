@@ -11,6 +11,7 @@ import QuizView from "./QuizView";
 import { colors, radius, space } from "./theme";
 
 const subStrands = pack.subStrands;
+const subStrandNames = Object.fromEntries(subStrands.map((s) => [s.id, s.subStrand]));
 
 function prepareLabel(s: PrepareStep): string {
   switch (s.step) {
@@ -112,7 +113,13 @@ export default function TutorScreen() {
 
         {/* Both stay mounted so switching tabs keeps the answer and quiz progress. */}
         <View style={[styles.flex, tab !== "ask" && styles.hidden]}>
-          <AskView key={subStrand} session={session} subStrand={subStrand} suggestedQuestions={current.suggestedQuestions ?? []} />
+          <AskView
+            key={subStrand}
+            session={session}
+            subStrand={subStrand}
+            subStrandNames={subStrandNames}
+            suggestedQuestions={current.suggestedQuestions ?? []}
+          />
         </View>
         <View style={[styles.flex, tab !== "quiz" && styles.hidden]}>
           <QuizView key={subStrand} session={session} subStrand={subStrand} items={items} />

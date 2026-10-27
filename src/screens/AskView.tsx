@@ -10,10 +10,12 @@ type Turn = { question: string; text: string; done?: Answer };
 export default function AskView({
   session,
   subStrand,
+  subStrandNames,
   suggestedQuestions,
 }: {
   session: TutorSession;
   subStrand: string;
+  subStrandNames: Record<string, string>;
   suggestedQuestions: string[];
 }) {
   const [question, setQuestion] = useState("");
@@ -23,6 +25,7 @@ export default function AskView({
 
   const answering = turn != null && turn.done == null;
   const fallback = turn?.done?.kind === "fallback";
+  const answeredFrom = turn?.done && turn.done.kind === "answer" && turn.done.subStrand !== subStrand ? subStrandNames[turn.done.subStrand] : null;
 
   async function ask(q: string) {
     const text = q.trim();
@@ -37,7 +40,7 @@ export default function AskView({
       setTurn({
         question: text,
         text: "",
-        done: { kind: "fallback", text: `Something went wrong: ${e?.message ?? e}`, sources: [], relevance: 0, timings: { relevanceMs: 0, totalMs: 0 } },
+        done: { kind: "fallback", text: `Something went wrong: ${e?.message ?? e}`, sources: [], relevance: 0, subStrand, timings: { relevanceMs: 0, totalMs: 0 } },
       });
     }
   }
@@ -59,6 +62,7 @@ export default function AskView({
         {turn && (
           <>
             <Text style={styles.question}>{turn.question}</Text>
+            {answeredFrom && <Text style={styles.answeredFrom}>From the {answeredFrom} lesson</Text>}
             <Pressable onLongPress={() => setShowTimings((v) => !v)} style={[styles.answer, fallback && styles.answerFallback]}>
               <AnswerBody text={turn.done?.text ?? turn.text} question={turn.question} muted={fallback} />
               {showTimings && turn.done && (
@@ -115,6 +119,7 @@ const styles = StyleSheet.create({
   suggestion: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: radius.md, padding: space.md },
   suggestionText: { fontSize: 16, color: colors.accent, fontWeight: "600" },
   question: { fontSize: 17, fontWeight: "600", color: colors.text },
+  answeredFrom: { fontSize: 14, color: colors.muted, fontWeight: "600" },
   answer: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: radius.md, padding: space.lg, gap: space.md },
   answerFallback: { backgroundColor: colors.fallback, borderColor: colors.fallback },
   timings: { fontSize: 12, color: colors.muted },

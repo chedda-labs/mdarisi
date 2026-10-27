@@ -3,7 +3,7 @@ import { completion, loadModel, resume, suspend, VERBOSITY } from "@qvac/sdk";
 import { subStrandContext } from "./context";
 import type { ModelRole } from "./model";
 import { buildPrompt, FALLBACK } from "./prompt";
-import { buildIndex, EMBED_CONFIG, relevance, RELEVANCE_THRESHOLD, type RelevanceIndex } from "./relevance";
+import { buildIndex, EMBED_CONFIG, embedQuestion, rank, RELEVANCE_THRESHOLD, ROUTE_MARGIN, type RelevanceIndex } from "./relevance";
 
 type Pack = Parameters<typeof subStrandContext>[0];
 
@@ -40,6 +40,9 @@ export type Answer = {
   // Best match between the question and the lesson text; below
   // RELEVANCE_THRESHOLD the model isn't asked.
   relevance: number;
+  // The sub-strand whose lesson text answered: the one that best matches the
+  // question, which may not be the one the learner has open.
+  subStrand: string;
   timings: { relevanceMs: number; firstWordMs?: number; totalMs: number; promptTokens?: number };
 };
 
@@ -85,17 +88,27 @@ export class TutorSession {
     }
   }
 
-  ask(subStrand: string, question: string, onText: (text: string) => void): Promise<Answer> {
+  // Answers from the open sub-strand unless another matches the question
+  // clearly better. Sub-strands share words (salt, water, separate), so a
+  // question from one can pass the gate on another whose lesson doesn't cover
+  // it, and the model then makes an answer up.
+  ask(openSubStrand: string, question: string, onText: (text: string) => void): Promise<Answer> {
     return this.exclusive(async () => {
-      const index = this.indexes.get(subStrand)!;
       const t0 = Date.now();
-      const rel = await relevance(this.embedId, index, question);
+      const embedding = await embedQuestion(this.embedId, question);
+      let subStrand = openSubStrand;
+      let rel = rank(this.indexes.get(openSubStrand)!, embedding);
+      const open = rel.score;
+      for (const [id, index] of this.indexes) {
+        const r = rank(index, embedding);
+        if (r.score > rel.score && r.score - open > ROUTE_MARGIN) [subStrand, rel] = [id, r];
+      }
       const relevanceMs = Date.now() - t0;
       const sources = rel.ranked.slice(0, 2).map((r) => ({ title: r.chunk.title, score: r.score }));
 
       if (rel.score < RELEVANCE_THRESHOLD) {
         onText(FALLBACK);
-        return { kind: "fallback", text: FALLBACK, sources: [], relevance: rel.score, timings: { relevanceMs, totalMs: Date.now() - t0 } };
+        return { kind: "fallback", text: FALLBACK, sources: [], relevance: rel.score, subStrand: openSubStrand, timings: { relevanceMs, totalMs: Date.now() - t0 } };
       }
 
       const { text, firstWordMs, promptTokens } = await this.stream(subStrand, question, t0, onText);
@@ -105,6 +118,7 @@ export class TutorSession {
         text,
         sources: kind === "answer" ? sources : [],
         relevance: rel.score,
+        subStrand,
         timings: { relevanceMs, firstWordMs, totalMs: Date.now() - t0, promptTokens },
       };
     });

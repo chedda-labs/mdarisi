@@ -33,6 +33,12 @@ function cosine(a: number[], b: number[]): number {
 // Re-check as the test set grows.
 export const RELEVANCE_THRESHOLD = 0.39;
 
+// How much better another sub-strand must match before the tutor answers from
+// it instead of the open one. Calibrated on two sub-strands (2026-10-27):
+// questions both lessons cover differed by 0.006-0.065, questions belonging
+// to the other sub-strand by 0.157-0.276. Small set; re-check as it grows.
+export const ROUTE_MARGIN = 0.1;
+
 export type RelevanceIndex = { chunks: Chunk[]; vectors: number[][] };
 
 export async function buildIndex(embedModelId: string, chunks: Chunk[]): Promise<RelevanceIndex> {
@@ -40,13 +46,21 @@ export async function buildIndex(embedModelId: string, chunks: Chunk[]): Promise
   return { chunks, vectors: embedding };
 }
 
+export async function embedQuestion(embedModelId: string, question: string): Promise<number[]> {
+  const { embedding } = await embed({ modelId: embedModelId, text: queryText(question) });
+  return embedding;
+}
+
 // Highest similarity between the question and any chunk of the sub-strand.
 // Below the gate's threshold the tutor replies with the fallback without
 // calling the LLM, since a small model can't be trusted to refuse by itself.
-export async function relevance(embedModelId: string, index: RelevanceIndex, question: string) {
-  const { embedding } = await embed({ modelId: embedModelId, text: queryText(question) });
+export function rank(index: RelevanceIndex, question: number[]) {
   const ranked = index.vectors
-    .map((v, i) => ({ chunk: index.chunks[i], score: cosine(embedding, v) }))
+    .map((v, i) => ({ chunk: index.chunks[i], score: cosine(question, v) }))
     .sort((a, b) => b.score - a.score);
   return { score: ranked[0].score, chunkId: ranked[0].chunk.id, ranked };
+}
+
+export async function relevance(embedModelId: string, index: RelevanceIndex, question: string) {
+  return rank(index, await embedQuestion(embedModelId, question));
 }
