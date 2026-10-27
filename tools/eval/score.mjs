@@ -34,10 +34,14 @@ for (const { subStrand, inScope, outOfScope } of questions.subStrands) {
     if (!a) continue;
     const missing = a.kind === "answer" ? missingFacts(q, a.text) : q.keyFacts;
     const wrong = a.kind === "answer" ? wrongClaims(q, a.text) : [];
+    // Runs from before routing have no "from"; they answered from the open sub-strand.
+    const wrongSource = a.kind === "answer" && (a.from ?? subStrand) !== (q.from ?? subStrand);
+    const ok = missing.length === 0 && wrong.length === 0 && !wrongSource;
     // "Main point" is the first key fact: the yes/no or the core definition.
-    const main = a.kind === "answer" && !missing.includes(q.keyFacts[0]) && wrong.length === 0;
-    const note = a.kind === "fallback" ? "refused" : [...missing.map((k) => k.fact), ...wrong.map((w) => `says: ${w.claim}`)].join("; ");
-    rows.push({ subStrand, q, a, pass: missing.length === 0 && wrong.length === 0, main, note });
+    const main = a.kind === "answer" && !missing.includes(q.keyFacts[0]) && wrong.length === 0 && !wrongSource;
+    const problems = [...missing.map((k) => k.fact), ...wrong.map((w) => `says: ${w.claim}`), ...(wrongSource ? [`answered from ${a.from}`] : [])];
+    const note = a.kind === "fallback" ? "refused" : problems.join("; ");
+    rows.push({ subStrand, q, a, pass: ok, main, note });
   }
   for (const q of outOfScope) {
     const a = answers.get(q.id);

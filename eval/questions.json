@@ -1,5 +1,5 @@
 {
-  "about": "Test set, grouped by sub-strand; each sub-strand's tutor answers only from its own lesson text. An in-scope question passes when the tutor answers (no fallback), every key fact matches at least one of its patterns, and no 'wrong' pattern matches: wrong patterns catch known false statements that would otherwise pass on keywords alone. Patterns are case-insensitive regexes. An out-of-scope question passes when the tutor gives the fallback. 'near' marks out-of-scope questions from the same strand that this sub-strand's lesson text does not cover.",
+  "about": "Test set, grouped by the sub-strand the learner has open. The tutor answers from whichever sub-strand's lesson text matches the question best. An in-scope question passes when the tutor answers (no fallback) from the expected sub-strand ('from', or the open one when absent), every key fact matches at least one of its patterns, and no 'wrong' pattern matches: wrong patterns catch known false statements that would otherwise pass on keywords alone. Patterns are case-insensitive regexes. Routed questions (ids r*) belong to the other sub-strand. An out-of-scope question passes when the tutor gives the fallback.",
   "subStrands": [
     {
       "subStrand": "g7.sci.mix",
@@ -527,6 +527,56 @@
               ]
             }
           ]
+        },
+        {
+          "id": "r1",
+          "question": "What is a compound?",
+          "from": "g7.sci.elc",
+          "keyFacts": [
+            {
+              "fact": "two or more elements joined chemically",
+              "any": [
+                "join",
+                "combine"
+              ]
+            },
+            {
+              "fact": "example such as water, carbon dioxide or salt",
+              "any": [
+                "water",
+                "carbon dioxide",
+                "salt",
+                "sodium chloride"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "r2",
+          "question": "What is an element?",
+          "from": "g7.sci.elc",
+          "keyFacts": [
+            {
+              "fact": "cannot be broken down; one kind of atom",
+              "any": [
+                "broken down",
+                "one kind of atom",
+                "simpler"
+              ]
+            },
+            {
+              "fact": "example such as oxygen, carbon or iron",
+              "any": [
+                "oxygen",
+                "carbon",
+                "iron",
+                "copper",
+                "gold",
+                "aluminium",
+                "hydrogen"
+              ]
+            }
+          ]
         }
       ],
       "outOfScope": [
@@ -553,16 +603,6 @@
         {
           "id": "x6",
           "question": "What causes rain?"
-        },
-        {
-          "id": "x7",
-          "question": "What is a compound?",
-          "near": true
-        },
-        {
-          "id": "x8",
-          "question": "What is an element?",
-          "near": true
         }
       ]
     },
@@ -862,6 +902,49 @@
               ]
             }
           ]
+        },
+        {
+          "id": "r3",
+          "question": "What is a solute?",
+          "from": "g7.sci.mix",
+          "keyFacts": [
+            {
+              "fact": "the substance that dissolves",
+              "any": [
+                "dissolve"
+              ]
+            },
+            {
+              "fact": "example such as salt or sugar",
+              "any": [
+                "salt",
+                "sugar"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "r4",
+          "question": "How can I separate sand from water?",
+          "from": "g7.sci.mix",
+          "keyFacts": [
+            {
+              "fact": "filtering or decanting",
+              "any": [
+                "filter",
+                "decant",
+                "pour(ing)? off"
+              ]
+            }
+          ],
+          "wrong": [
+            {
+              "claim": "use a magnet",
+              "any": [
+                "magnet"
+              ]
+            }
+          ]
         }
       ],
       "outOfScope": [
@@ -876,16 +959,6 @@
         {
           "id": "ex3",
           "question": "Who is the president of Kenya?"
-        },
-        {
-          "id": "ex4",
-          "question": "What is a solute?",
-          "near": true
-        },
-        {
-          "id": "ex5",
-          "question": "How can I separate sand from water?",
-          "near": true
         }
       ]
     }

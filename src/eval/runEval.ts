@@ -22,7 +22,7 @@ export async function runEval(session: TutorSession, emit: (r: EvalRecord) => vo
   for (const [i, q] of all.entries()) {
     onStatus(`Question ${i + 1} of ${all.length}`);
     const answer = await session.ask(q.subStrand, q.question, () => {});
-    emit({ phase: "answer", ...q, kind: answer.kind, relevance: Number(answer.relevance.toFixed(4)), ...answer.timings, text: answer.text });
+    emit({ phase: "answer", ...q, kind: answer.kind, from: answer.subStrand, relevance: Number(answer.relevance.toFixed(4)), ...answer.timings, text: answer.text });
   }
   emit({ phase: "done" });
   onStatus("Done");
