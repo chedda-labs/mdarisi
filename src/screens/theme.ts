@@ -12,6 +12,8 @@ export const colors = {
   checkBorder: "#E8CF83",
   fallback: "#EEF0F6",
   fallbackText: "#3A4566",
+  wrong: "#B4483A",
+  wrongSoft: "#FBE9E6",
 };
 
 export const space = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 };
