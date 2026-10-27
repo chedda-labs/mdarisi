@@ -1,24 +1,19 @@
 {
   "expo": {
-    "name": "mdarisi",
+    "name": "Mdarisi",
     "slug": "mdarisi",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#FFC23D"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
@@ -42,7 +37,31 @@
           "installMissingPrebuilds": true
         }
       ],
-      "./plugins/withBundledModel"
-    ]
+      "./plugins/withBundledModel",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/Baloo2_600SemiBold.ttf",
+            "./assets/fonts/Baloo2_700Bold.ttf",
+            "./assets/fonts/Baloo2_800ExtraBold.ttf",
+            "./assets/fonts/Nunito_400Regular.ttf",
+            "./assets/fonts/Nunito_600SemiBold.ttf",
+            "./assets/fonts/Nunito_700Bold.ttf",
+            "./assets/fonts/Nunito_800ExtraBold.ttf",
+            "./assets/fonts/PlusJakartaSans_800ExtraBold.ttf"
+          ]
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#1E4D3B",
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200
+        }
+      ]
+    ],
+    "backgroundColor": "#1E4D3B"
   }
 }
