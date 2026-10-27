@@ -33,6 +33,26 @@ const EXAMPLES: Message[] = [
   { role: "assistant", content: FALLBACK },
 ];
 
+// The user message for "Explain" on a wrong quiz answer. It goes after
+// the cached sub-strand prefix, so only these few lines need reading.
+export function explainRequest(q: {
+  prompt: string;
+  learnerAnswer: string;
+  correctAnswer: string;
+  explanation: string;
+}): string {
+  // Written about the learner, not as them: in the first person the model
+  // answered as the learner and invented what they had been thinking.
+  return (
+    `A learner got this quiz question wrong.\nQuestion: ${q.prompt}\n` +
+    `Learner's answer: ${q.learnerAnswer}\nCorrect answer: ${q.correctAnswer}\n` +
+    `Teacher's note: ${q.explanation}\n` +
+    'Talk to the learner as "you". Using the teacher\'s note, explain why the correct answer is right ' +
+    "and why the learner's answer is wrong. Do not guess what the learner was thinking. " +
+    "Do not repeat the question or the correct answer on its own line."
+  );
+}
+
 function systemPrompt(chunks: Chunk[]): string {
   const lesson = chunks.map((c, i) => `[${i + 1}] ${c.title}: ${c.text}`).join("\n");
   return `${INSTRUCTIONS}\n\nLesson text:\n${lesson}`;

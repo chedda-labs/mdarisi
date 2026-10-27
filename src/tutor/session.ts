@@ -40,7 +40,9 @@ export class TutorSession {
   private llmId = "";
   private embedId = "";
   private indexes = new Map<string, RelevanceIndex>();
-  private busy = false;
+  // One completion at a time: Ask and Quiz share the model, so a call made
+  // while another is running waits for it instead of failing.
+  private queue: Promise<unknown> = Promise.resolve();
 
   constructor(private pack: Pack) {}
 
@@ -73,10 +75,8 @@ export class TutorSession {
     }
   }
 
-  async ask(subStrand: string, question: string, onText: (text: string) => void): Promise<Answer> {
-    if (this.busy) throw new Error("Already answering a question");
-    this.busy = true;
-    try {
+  ask(subStrand: string, question: string, onText: (text: string) => void): Promise<Answer> {
+    return this.exclusive(async () => {
       const index = this.indexes.get(subStrand)!;
       const t0 = Date.now();
       const rel = await relevance(this.embedId, index, question);
@@ -88,33 +88,48 @@ export class TutorSession {
         return { kind: "fallback", text: FALLBACK, sources: [], timings: { relevanceMs, totalMs: Date.now() - t0 } };
       }
 
-      const run = completion({
-        modelId: this.llmId,
-        history: buildPrompt(question, index.chunks),
-        stream: true,
-        kvCache: subStrand,
-        generationParams: GENERATION,
-      });
-      let text = "";
-      let firstWordMs: number | undefined;
-      for await (const event of run.events) {
-        if (event.type !== "contentDelta") continue;
-        text += event.text;
-        if (firstWordMs == null && text.trim()) firstWordMs = Date.now() - t0;
-        onText(text);
-      }
-      const final = await run.final;
-      text = final.contentText.trim();
+      const { text, firstWordMs, promptTokens } = await this.stream(subStrand, question, t0, onText);
       const kind = text.startsWith(FALLBACK) ? "fallback" : "answer";
       return {
         kind,
         text,
         sources: kind === "answer" ? sources : [],
-        timings: { relevanceMs, firstWordMs, totalMs: Date.now() - t0, promptTokens: final.stats?.promptTokens },
+        timings: { relevanceMs, firstWordMs, totalMs: Date.now() - t0, promptTokens },
       };
-    } finally {
-      this.busy = false;
+    });
+  }
+
+  // "Explain" on a wrong quiz answer. No relevance gate: the request is built
+  // from the sub-strand's own practice item.
+  explain(subStrand: string, request: string, onText: (text: string) => void): Promise<string> {
+    return this.exclusive(async () => (await this.stream(subStrand, request, Date.now(), onText)).text);
+  }
+
+  private exclusive<T>(run: () => Promise<T>): Promise<T> {
+    const result = this.queue.then(run);
+    this.queue = result.catch(() => {});
+    return result;
+  }
+
+  // Streams an answer after the sub-strand's cached prefix.
+  private async stream(subStrand: string, userMessage: string, t0: number, onText: (text: string) => void) {
+    const run = completion({
+      modelId: this.llmId,
+      history: buildPrompt(userMessage, this.indexes.get(subStrand)!.chunks),
+      stream: true,
+      kvCache: subStrand,
+      generationParams: GENERATION,
+    });
+    let text = "";
+    let firstWordMs: number | undefined;
+    for await (const event of run.events) {
+      if (event.type !== "contentDelta") continue;
+      text += event.text;
+      if (firstWordMs == null && text.trim()) firstWordMs = Date.now() - t0;
+      onText(text);
     }
+    const final = await run.final;
+    return { text: final.contentText.trim(), firstWordMs, promptTokens: final.stats?.promptTokens };
   }
 
   // Inference already running finishes regardless; SDK calls made while
