@@ -9,7 +9,8 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "eval": "esbuild tools/eval/run.ts --bundle --platform=node --format=esm --packages=external --outfile=tools/eval/.build/run.mjs --log-level=warning && node tools/eval/.build/run.mjs",
-    "eval:score": "node tools/eval/score.mjs"
+    "eval:score": "node tools/eval/score.mjs",
+    "pack": "node tools/pack-builder/build.mjs g7-sci --allow-drafts && esbuild tools/pack-builder/embed.ts --bundle --platform=node --format=esm --packages=external --outfile=tools/pack-builder/.build/embed.mjs --log-level=warning && node tools/pack-builder/.build/embed.mjs g7-sci"
   },
   "dependencies": {
     "@qvac/fabric-android-arm64": "0.22.0",

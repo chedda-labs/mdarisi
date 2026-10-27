@@ -55,14 +55,14 @@ Files using QVAC: `src/tutor/session.ts` (load, prime the cached prompt, gate, s
 
 ## Content
 
-Draft content for one sub-strand (Grade 7 Integrated Science, mixtures) is in `content/g7-sci/`. It was drafted with a large language model and is being reviewed by a teacher; every item stays `"status": "draft"` until approved. Strand and sub-strand names are not yet confirmed against the KICD curriculum design.
+Draft content for two sub-strands (Grade 7 Integrated Science: mixtures, and elements and compounds) is in `content/g7-sci/`. It was drafted with a large language model and is being reviewed by a teacher; every item stays `"status": "draft"` until approved. Strand and sub-strand names are not yet confirmed against the KICD curriculum design.
 
 ```bash
-node tools/pack-builder/build.mjs g7-sci                 # approved items only
-node tools/pack-builder/build.mjs g7-sci --allow-drafts  # include drafts (benchmarks only)
+npm run pack                                             # drafts included, plus lesson vectors (Node 24, models in bundle/models)
+node tools/pack-builder/build.mjs g7-sci                 # approved items only, no vectors
 ```
 
-The pack builder validates the items and writes `src/packs/g7-sci/pack.json`, which the app imports.
+The pack builder validates the items and writes `src/packs/g7-sci/pack.json`, which the app imports. `npm run pack` then adds each lesson chunk's EmbeddingGemma vector (`tools/pack-builder/embed.ts`), so the phone doesn't embed the lesson text at every launch; that took about 8 s per sub-strand. The pack records the model's SHA-256, and the app embeds on the device instead if it doesn't match the bundled model.
 
 ## Setup
 

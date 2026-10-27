@@ -46,6 +46,14 @@ export async function buildIndex(embedModelId: string, chunks: Chunk[]): Promise
   return { chunks, vectors: embedding };
 }
 
+// Vectors computed when the pack was built (tools/pack-builder/embed.ts).
+// Embedding the lesson chunks took about 8 s per sub-strand on every launch
+// of the demo phone. Only usable when the same model file computed them.
+export function storedIndex(chunks: (Chunk & { vector?: number[] })[], packModel: string | undefined, model: string): RelevanceIndex | null {
+  if (packModel !== model || !chunks.every((c) => c.vector)) return null;
+  return { chunks, vectors: chunks.map((c) => c.vector!) };
+}
+
 export async function embedQuestion(embedModelId: string, question: string): Promise<number[]> {
   const { embedding } = await embed({ modelId: embedModelId, text: queryText(question) });
   return embedding;
