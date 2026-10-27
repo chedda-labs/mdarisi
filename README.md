@@ -179,3 +179,5 @@ This is a demo shortcut. The product design keeps models and content as separate
 - [QVAC SDK](https://github.com/tetherto/qvac) by Tether
 - [Expo](https://expo.dev) and React Native
 - Qwen3 by Alibaba Cloud, EmbeddingGemma by Google, Llama 3.2 by Meta; GGUF conversions by Unsloth
+- Fonts: [Baloo 2](https://github.com/EkType/Baloo2), [Nunito](https://github.com/googlefonts/nunito) and [Plus Jakarta Sans](https://github.com/tokotype/PlusJakartaSans), SIL Open Font License 1.1 (licences in `assets/fonts/`)
+- [react-native-svg](https://github.com/software-mansion/react-native-svg) for icons
