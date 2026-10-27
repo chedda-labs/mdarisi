@@ -52,17 +52,6 @@ export default function AskView({
 
   return (
     <>
-      <View style={styles.header}>
-        <MwalimuAvatar size={44} />
-        <View style={styles.flex}>
-          <Text style={styles.name}>Mwalimu</Text>
-          <View style={styles.offlineRow}>
-            <View style={styles.dot} />
-            <Text style={styles.offline}>Works offline · on your phone</Text>
-          </View>
-        </View>
-      </View>
-
       <ScrollView
         ref={scroll}
         style={styles.flex}
@@ -70,7 +59,11 @@ export default function AskView({
         keyboardShouldPersistTaps="handled"
         onContentSizeChange={() => scroll.current?.scrollToEnd({ animated: true })}
       >
-        <Text style={styles.context}>{subStrandNames[subStrand]}</Text>
+        {/* Part of the chat rather than a fixed bar, so it scrolls away and leaves room. */}
+        <View style={styles.mwalimuRow}>
+          <MwalimuAvatar size={40} />
+          <Text style={styles.name}>Mwalimu</Text>
+        </View>
         <View style={[styles.bubble, styles.mwalimu]}>
           <Text style={type.body}>
             Habari! Ask me anything about {subStrandNames[subStrand].toLowerCase()}. I answer from your lesson, and I’ll tell you when I don’t know.
@@ -170,32 +163,9 @@ function TurnView({ turn, subStrand, subStrandNames }: { turn: Turn; subStrand: 
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: space.md,
-    paddingHorizontal: space.lg,
-    paddingVertical: space.md,
-    backgroundColor: colors.surface,
-    borderBottomWidth: 2,
-    borderBottomColor: colors.line,
-  },
+  mwalimuRow: { flexDirection: "row", alignItems: "center", gap: space.md },
   name: { fontFamily: fonts.heading800, fontSize: 21, lineHeight: 24, color: colors.ink },
-  offlineRow: { flexDirection: "row", alignItems: "center", gap: 6 },
-  dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.green700 },
-  offline: { fontFamily: fonts.body700, fontSize: 13, color: colors.green900 },
   chat: { padding: space.lg, gap: space.md },
-  context: {
-    alignSelf: "center",
-    fontFamily: fonts.body800,
-    fontSize: 12,
-    color: colors.muted,
-    backgroundColor: colors.pill,
-    borderRadius: radius.pill,
-    paddingHorizontal: space.md,
-    paddingVertical: 4,
-    overflow: "hidden",
-  },
   bubble: { paddingHorizontal: space.lg, paddingVertical: space.md, gap: space.sm },
   learner: { alignSelf: "flex-end", maxWidth: "80%", backgroundColor: colors.green700, borderRadius: 20, borderBottomRightRadius: 6 },
   learnerText: { color: colors.surface },

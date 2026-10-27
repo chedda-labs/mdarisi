@@ -102,7 +102,7 @@ export default function TutorScreen() {
             <XpPill xp={xp} />
           </View>
           <Text style={type.eyebrow}>
-            Grade {pack.manifest.grade} {pack.manifest.learningArea} · {current.strand}
+            Grade {pack.manifest.grade} · {pack.manifest.learningArea}
           </Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
             {subStrands.map((s) => {
