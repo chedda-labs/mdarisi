@@ -18,6 +18,9 @@ export const colors = {
   line: "#E1E8E2",
   pill: "#E6EEE8",
   surface: "#FFFFFF",
+  // Kitabu logo only.
+  logoGold: "#F2B53A",
+  logoCream: "#F7F4EC",
 };
 
 // Fonts are bundled by the expo-font config plugin; on Android each file's

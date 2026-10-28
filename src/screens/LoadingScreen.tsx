@@ -82,7 +82,7 @@ export default function LoadingScreen({
 
       <View style={styles.top}>
         <Animated.View style={{ transform: [{ translateY: bounce }] }}>
-          <AppIcon size={112} shadow />
+          <AppIcon size={112} gold shadow />
         </Animated.View>
         <Wordmark size={46} color={colors.surface} />
         <Text style={styles.tagline}>Mwalimu mfukoni, hata bila mtandao</Text>

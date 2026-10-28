@@ -63,18 +63,19 @@ export function Button({
 }
 
 // Kitabu: an open book with a four-point sparkle above the gutter.
-export function BookMark({ size, color = colors.green700, sparkle = color }: { size: number; color?: string; sparkle?: string }) {
+export function BookMark({ size, color = colors.green700, sparkle = colors.logoGold }: { size: number; color?: string; sparkle?: string }) {
   return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
-      <Path d="M12 0.8L12.8 3L15 3.8L12.8 4.6L12 6.8L11.2 4.6L9 3.8L11.2 3Z" fill={sparkle} />
-      <Path d="M2.5 9Q7 7.5 11.2 9.3V22Q7 20.3 2.5 21.6Z" fill={color} />
-      <Path d="M21.5 9Q17 7.5 12.8 9.3V22Q17 20.3 21.5 21.6Z" fill={color} />
+    <Svg width={size} height={size} viewBox="0 0 120 120" accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+      <Path d="M60 4Q62 14 72 16Q62 18 60 28Q58 18 48 16Q58 14 60 4Z" fill={sparkle} />
+      <Path d="M58 38C46 30 30 28 14 32L14 96C30 92 46 94 58 102Z" fill={color} />
+      <Path d="M62 38C74 30 90 28 106 32L106 96C90 92 74 94 62 102Z" fill={color} />
     </Svg>
   );
 }
 
-// The app icon: green Kitabu on a sunny-yellow rounded square.
-export function AppIcon({ size, shadow }: { size: number; shadow?: boolean }) {
+// The app icon: cream Kitabu on a green rounded square, or green on gold where
+// the background is already green.
+export function AppIcon({ size, gold, shadow }: { size: number; gold?: boolean; shadow?: boolean }) {
   return (
     <View
       accessible
@@ -82,14 +83,14 @@ export function AppIcon({ size, shadow }: { size: number; shadow?: boolean }) {
       style={{
         width: size,
         height: size,
-        borderRadius: size * 0.27,
-        backgroundColor: colors.sun400,
-        alignItems: "center",
-        justifyContent: "center",
-        ...(shadow && { borderBottomWidth: 8, borderBottomColor: colors.sun600 }),
+        borderRadius: size * 0.22,
+        backgroundColor: gold ? colors.logoGold : colors.green700,
+        ...(shadow && { borderBottomWidth: 8, borderBottomColor: gold ? colors.sun600 : colors.green900 }),
       }}
     >
-      <BookMark size={size * 0.62} />
+      <View style={{ position: "absolute", left: size * 0.125, top: size * 0.156 }}>
+        {gold ? <BookMark size={size * 0.75} sparkle={colors.green700} /> : <BookMark size={size * 0.75} color={colors.logoCream} />}
+      </View>
     </View>
   );
 }
