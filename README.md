@@ -108,3 +108,7 @@ Both run on the phone's processor (CPU) through `@qvac/sdk` 0.22.0. We also trie
 - Qwen3 by Alibaba Cloud, EmbeddingGemma by Google, Llama 3.2 by Meta; GGUF conversions by Unsloth
 - Fonts: [Baloo 2](https://github.com/EkType/Baloo2), [Nunito](https://github.com/googlefonts/nunito) and [Plus Jakarta Sans](https://github.com/tokotype/PlusJakartaSans), SIL Open Font License 1.1 (licences in `assets/fonts/`)
 - [react-native-svg](https://github.com/software-mansion/react-native-svg) for icons
+
+## Licence
+
+Copyright (c) 2026 Isaack Njama. All rights reserved. The code and lesson content are proprietary and shared with AI Yako judges for evaluation only; see [LICENSE](LICENSE). The AI models, fonts and libraries keep their own licences (see [The AI models](#the-ai-models) and the credits above).
