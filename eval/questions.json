@@ -862,6 +862,14 @@
                 "carbon"
               ]
             }
+          ],
+          "wrong": [
+            {
+              "claim": "graphite is a metal",
+              "any": [
+                "\\b(is|it's) an? metal\\b"
+              ]
+            }
           ]
         },
         {

@@ -127,8 +127,8 @@ Demo phone, airplane mode with Wi-Fi and mobile data off, release APK at commit 
 
 | Measure | Mixtures | Elements and compounds | All |
 | --- | --- | --- | --- |
-| In scope: every key fact, no known error | 20 / 26 | 15 / 16 | **35 / 42** |
-| In scope: main point right | 23 / 26 | 16 / 16 | **39 / 42** |
+| In scope: every key fact, no known error | 20 / 26 | 14 / 16 | **34 / 42** |
+| In scope: main point right | 23 / 26 | 15 / 16 | **38 / 42** |
 | In scope: wrongly refused | 0 | 0 | 0 |
 | Routed to the other sub-strand's lesson | 2 / 2 | 2 / 2 | 4 / 4 |
 | Out of scope: refused | 6 / 6 | 3 / 3 | **9 / 9** |
@@ -139,9 +139,9 @@ Demo phone, airplane mode with Wi-Fi and mobile data off, release APK at commit 
 
 Answers took 3.1–14.4 s in full, with the first word after 0.4–2.8 s. Every off-topic question was stopped by the relevance gate, so the tutor model was never asked.
 
-The seven that fail:
+The eight that fail:
 
-- **Errors (2):** "Is githeri a uniform mixture?" opens with "Yes." and then correctly says it is non-uniform. "Is salt water a mixture? Why?" names filtering as a way to separate it.
+- **Errors (3):** "Is githeri a uniform mixture?" opens with "Yes." and then correctly says it is non-uniform. "Is salt water a mixture? Why?" names filtering as a way to separate it. "Is graphite a metal?" opens with "No." and then calls graphite "a form of carbon that is a metal".
 - **Missing a key fact (5):** muddy water clears because it is non-uniform (q9); a mixture can be separated because its substances are not chemically joined (q18); each substance keeps its own properties (q23); "What is an element?" gives no example element (e1, and r2, the same question asked from the Mixtures tab).
 
-Before tuning, the same phone scored 32 / 42 and 38 / 42 (`eval/results/phone-2026-10-27-vectors.jsonl`). Tuning reworded lesson text the model misread (sieving, githeri, the water molecule, non-metals) and added a "Yes." example to the prompt. Each variant was compared over four sampling seeds on the laptop, because any prompt change moves unrelated answers by about ±3 questions; those runs are in `eval/results/laptop-2026-10-27-tune-*.jsonl`. The scoring patterns were not changed during tuning.
+Before tuning, the same phone scored 32 / 42 and 38 / 42 (`eval/results/phone-2026-10-27-vectors.jsonl`). Tuning reworded lesson text the model misread (sieving, githeri, the water molecule, non-metals) and added a "Yes." example to the prompt. Each variant was compared over four sampling seeds on the laptop, because any prompt change moves unrelated answers by about ±3 questions; those runs are in `eval/results/laptop-2026-10-27-tune-*.jsonl`. The scoring patterns were not changed during tuning. The graphite error was caught by reading the answers afterwards; its "wrong" pattern was added on 29 October and the numbers above are rescored with it (it was 35 / 42 and 39 / 42 before).

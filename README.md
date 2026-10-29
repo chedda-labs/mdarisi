@@ -27,14 +27,14 @@ We tested it on a mid-range phone (Redmi Note 13, 6 GB of memory) in airplane mo
 
 | What we measured | Result |
 | --- | --- |
-| Questions answered with every key fact | 35 of 42 |
-| Questions where the main point was right | 39 of 42 |
+| Questions answered with every key fact | 34 of 42 |
+| Questions where the main point was right | 38 of 42 |
 | Off-topic questions refused | 9 of 9 |
 | Time until the answer starts | about 2 seconds |
 | Time for the full answer | about 8 seconds |
 | Opening the app | about 9 seconds (94 seconds the very first time) |
 
-The full results, including the seven answers that fall short, are in [docs/development.md](docs/development.md#results).
+The full results, including the eight answers that fall short, are in [docs/development.md](docs/development.md#results).
 
 ## What needs internet
 
