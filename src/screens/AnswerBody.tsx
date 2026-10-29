@@ -6,13 +6,15 @@ import { colors, radius, space, type } from "./theme";
 const normalise = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 
 // The tutor ends each answer with a line starting "Check:"; show it apart.
-// The small model sometimes just repeats the learner's question there, which
-// reads as a glitch, so that case is dropped.
+// The small model sometimes just repeats the learner's question there, and a
+// long answer can hit the token limit mid-question ("Is the filtr"); both read
+// as a glitch, so they are dropped. A check still streaming shows once complete.
 function splitCheck(text: string, question: string): { body: string; check?: string } {
   const i = text.indexOf("Check:");
   if (i < 0) return { body: text.trim() };
   const check = text.slice(i + "Check:".length).trim();
-  return { body: text.slice(0, i).trim(), check: normalise(check) === normalise(question) ? undefined : check };
+  const keep = check.endsWith("?") && normalise(check) !== normalise(question);
+  return { body: text.slice(0, i).trim(), check: keep ? check : undefined };
 }
 
 export default function AnswerBody({ text, question, muted }: { text: string; question: string; muted?: boolean }) {
