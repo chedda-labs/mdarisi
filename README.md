@@ -7,13 +7,16 @@
 
 Built for the [AI Yako: Own Your AI hackathon](https://dorahacks.io/hackathon/ai-yako/detail) (24–31 October 2026). It uses [QVAC](https://github.com/tetherto/qvac), Tether's toolkit for running AI on your own device.
 
+- **Demo video:** [youtu.be/DdSt7OM_IYc](https://youtu.be/DdSt7OM_IYc) (the phone is in airplane mode throughout)
+- **Download the app:** [v1.0.0 release](https://github.com/chedda-labs/mdarisi/releases/tag/v1.0.0) (Android APK)
+
 ## What a learner can do
 
 The app covers two topics from Grade 7 Integrated Science: **mixtures**, and **elements and compounds**. For each topic, a learner can:
 
 - **Ask Mwalimu (the tutor) a question.** Mwalimu answers only from the lesson, and can show which part of the lesson it used. If the lesson doesn't cover the question, Mwalimu says "I don't know that yet. Ask your teacher." instead of guessing. If the question belongs to the other topic, Mwalimu answers from that lesson and says so.
 - **Take a 5-question quiz.** The app marks answers using the answer key, not the AI, so the marks are always right. A wrong answer gets a hint first, then the correct answer.
-- **Tap Explain** after a wrong answer to have Mwalimu explain it, using the teacher's note for that question.
+- **Tap "Ask Mwalimu why"** after a wrong answer to have Mwalimu explain it, using the teacher's note for that question.
 
 ## How it works
 
@@ -44,7 +47,7 @@ Nothing. The AI models are inside the app, so it works offline from the first la
 
 You need an Android phone with a 64-bit (arm64) processor, Android 10 or newer, and about 1.8 GB of free space.
 
-1. Install the app (APK file). It is about 890 MB because the AI models are inside it.
+1. Install the app (APK file) from the [v1.0.0 release](https://github.com/chedda-labs/mdarisi/releases/tag/v1.0.0). It is about 890 MB because the AI models are inside it.
 2. Turn on airplane mode and turn off Wi-Fi.
 3. Open Mdarisi. The first launch takes about a minute and a half while it reads the lessons; later launches take about 9 seconds.
 
@@ -111,4 +114,4 @@ Both run on the phone's processor (CPU) through `@qvac/sdk` 0.22.0. We also trie
 
 ## Licence
 
-Copyright (c) 2026 Isaack Njama. All rights reserved. The code and lesson content are proprietary and shared with AI Yako judges for evaluation only; see [LICENSE](LICENSE). The AI models, fonts and libraries keep their own licences (see [The AI models](#the-ai-models) and the credits above).
+Copyright (c) 2026 Isaack Njama. The code and lesson content are released under the MIT License; see [LICENSE](LICENSE). The AI models, fonts and libraries keep their own licences (see [The AI models](#the-ai-models) and the credits above).
