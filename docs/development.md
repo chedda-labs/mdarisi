@@ -104,7 +104,7 @@ adb shell monkey -p com.mdarisi.app -c android.intent.category.LAUNCHER 1
 | Full answer (≤ 72 tokens) | 3.5–14 s |
 | Original 5 test questions | 4 / 5 correct |
 | Relevance gate on 15 questions | 15 / 15 (in-scope 0.445–0.860, out-of-scope 0.172–0.331, threshold 0.39) |
-| Peak app memory, both models loaded | about 1.95 GB |
+| Peak app memory, both models loaded | about 1.95 GB (benchmark build; the app now peaks at about 1.3 GB, see [Memory](#memory)) |
 
 Without the cache, a ~550-token grounded prompt took 15–32 s before the first word: the phone reads prompts at only 18–36 tokens/s.
 
@@ -113,6 +113,10 @@ Without the cache, a ~550-token grounded prompt took 15–32 s before the first 
 Measured on the demo phone in airplane mode with Wi-Fi and mobile data also off (27 Oct, commit `0840b52`).
 
 Nearly all of the 94 s first launch is reading the two lessons into the KV cache, about 41 s each; later launches reuse it. The slower later launches (18–20 s instead of about 9 s) spend 7–12 s on the first use of the tutor model, most likely because Android no longer has the model file in memory (not proven). Changing the prompt or the model settings makes the next launch read both lessons again.
+
+## Memory
+
+The release build peaks at 1,319 MB of total PSS (29 Oct, the build installed on 28 Oct from `6528b14`). It was sampled every 2 s with `tools/eval/sample-mem.sh` through a warm launch and four questions, including a long worked example and one routed to the other sub-strand. Memory reaches about 1.3 GB once both models are loaded, 16 s after launch, and stays there while answering. Raw samples: `eval/results/phone-2026-10-29-meminfo.tsv`.
 
 ## Test set
 
