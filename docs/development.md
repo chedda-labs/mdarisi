@@ -118,6 +118,26 @@ Nearly all of the 94 s first launch is reading the two lessons into the KV cache
 
 The release build peaks at 1,319 MB of total PSS (29 Oct, the build installed on 28 Oct from `6528b14`). It was sampled every 2 s with `tools/eval/sample-mem.sh` through a warm launch and four questions, including a long worked example and one routed to the other sub-strand. Memory reaches about 1.3 GB once both models are loaded, 16 s after launch, and stays there while answering. Raw samples: `eval/results/phone-2026-10-29-meminfo.tsv`.
 
+## Low-memory phone
+
+On 30 October the release build (app code as in v1.0.0) went through a full session on a Samsung Galaxy A03 (SM-A035F): 2.5 GB of RAM, 3 GB of swap. The phone was online and driven over adb, so this checks memory, not offline use, and it is not a test-set run.
+
+First launch, from the app's `[prepare]` log: copying the models 12.3 s, loading the tutor model 7.4 s, reading the Mixtures lesson 30.2 s and the Elements and compounds lesson 26.4 s, loading the embedding model 9.0 s; about 85 s in all. Later launches were not timed.
+
+| Question | Verdict |
+| --- | --- |
+| What is a solute? | Close: "dissolves in a solution" instead of in a solvent |
+| How can I separate sand from water? | Right |
+| Is air a mixture? | Right |
+| How are metals different from non-metals? | Right for Grade 7, no graphite exception |
+| Is water an element or a compound? | Right fact behind a "Yes." opener, like githeri |
+| What is an element? | Right |
+| What is photosynthesis? | Refused |
+
+The release build logs nothing per answer; every answer was on screen within 75 s of the tap. All five Elements and compounds quiz questions worked, including a wrong answer with its hint.
+
+Total PSS stayed at 1,220–1,234 MB from the end of the first launch through seven questions and the quiz. With about 450 MB of RAM free, Android kept 470–880 MB of the app in swap, most while the keyboard was open. There was no crash and no error in logcat.
+
 ## Test set
 
 `eval/questions.json` holds 42 in-scope and 9 out-of-scope questions, grouped by the sub-strand the learner has open. The tutor answers from the open sub-strand unless another one's lesson text matches the question clearly better (`ROUTE_MARGIN` in `src/tutor/relevance.ts`); the four routed questions (`r1`–`r4`) must be answered from the other sub-strand. An in-scope answer passes when it isn't refused, every key fact matches one of its patterns, and none of the question's known wrong statements appears. An out-of-scope question passes when the tutor refuses. `src/eval/runEval.ts` asks every question through the app's own `TutorSession` (relevance gate, cached prompt, generation settings); `tools/eval/score.mjs` marks the run and prints Markdown.

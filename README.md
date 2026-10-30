@@ -39,13 +39,15 @@ We tested it on a mid-range phone (Redmi Note 13, 6 GB of memory) in airplane mo
 
 The full results, including the eight answers that fall short, are in [docs/development.md](docs/development.md#results).
 
+We also ran it on a low-cost phone (Samsung Galaxy A03, 2.5 GB of memory). It handled every question we asked, refusing the one outside the lessons, and ran a full quiz without a crash. It was slower: the first launch took about 85 seconds, and answers were slower to appear. The app used about 1.2 GB of memory, so Android had to move part of it to storage. For the best experience, use a phone with 4 GB of memory or more. Details are in [docs/development.md](docs/development.md#low-memory-phone).
+
 ## What needs internet
 
 Nothing. The AI models are inside the app, so it works offline from the first launch.
 
 ## Try it
 
-You need an Android phone with a 64-bit (arm64) processor, Android 10 or newer, and about 1.8 GB of free space.
+You need an Android phone with a 64-bit (arm64) processor, Android 10 or newer, at least 2.5 GB of memory (4 GB or more recommended), and about 1.8 GB of free space.
 
 1. Install the app (APK file) from the [v1.0.0 release](https://github.com/chedda-labs/mdarisi/releases/tag/v1.0.0). It is about 890 MB because the AI models are inside it.
 2. Turn on airplane mode and turn off Wi-Fi.
